@@ -20,18 +20,15 @@ export const LogInDialog: FC<ILogInDialog> = ({ isOpen, onClose }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<ILogInForm>({ mode: 'onSubmit' }); // TODO: validation
 
   const sinUpMutation = useMutation<unknown, unknown, ILogInForm>(
     (formData) =>
-      axios.post(
-        'signin',
-        {
-          login: formData.login,
-          password: formData.password,
-        }
-      ),
+      axios.post('signin', {
+        login: formData.login,
+        password: formData.password,
+      }),
     {
       onSuccess: (data) => console.log(data),
       onError: (error) => console.log(error),

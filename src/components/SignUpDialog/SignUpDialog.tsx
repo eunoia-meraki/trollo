@@ -20,7 +20,7 @@ export const SignUpDialog: FC<ISignUpDialog> = ({ isOpen, onClose }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<ISignUpForm>({ mode: 'onSubmit' }); // TODO: validation
 
   const sinUpMutation = useMutation<unknown, unknown, ISignUpForm>(
