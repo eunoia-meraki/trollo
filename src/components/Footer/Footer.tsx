@@ -1,10 +1,12 @@
 import type { FC } from 'react';
 
+import { Path } from '../../types';
+
 export const Footer: FC = () => (
   <footer className="mt-auto p-4 bg-white sm:p-6 dark:bg-gray-800">
     <div className="md:flex md:justify-between">
       <div className="mb-6 md:mb-0">
-        <a href="/" className="flex items-center">
+        <a href={Path.Welcome} className="flex items-center">
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
             Trollo
           </span>
@@ -66,7 +68,7 @@ export const Footer: FC = () => (
     <div className="sm:flex sm:items-center sm:justify-between">
       <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
         © 2022{' '}
-        <a href="https://flowbite.com" className="hover:underline">
+        <a href={Path.Welcome} className="hover:underline">
           Trollo™
         </a>
         . All Rights Reserved.
