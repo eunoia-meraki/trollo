@@ -1,10 +1,14 @@
-import type { FC } from 'react';
+import { FC, useContext } from 'react';
 
 import { useForm } from 'react-hook-form';
 
 import { useMutation } from 'react-query';
 
 import axios from 'axios';
+
+import { AuthContext } from '../../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import { Path } from '../../types/enums';
 
 interface ILogInForm {
   login: string;
@@ -15,23 +19,34 @@ export const SignIn: FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     // formState: { errors },
   } = useForm<ILogInForm>({ mode: 'onSubmit' }); // TODO: validation
 
-  const sinUpMutation = useMutation<unknown, unknown, ILogInForm>(
+  const authContext = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const signInMutation = useMutation<{ token: string }, unknown, ILogInForm>(
     (formData) =>
-      axios.post('signin', {
-        login: formData.login,
-        password: formData.password,
-      }),
+      axios
+        .post('signin', {
+          login: formData.login,
+          password: formData.password,
+        })
+        .then((response) => response.data),
     {
-      onSuccess: (data) => console.log(data),
+      onSuccess: (data) => {
+        authContext.setToken(data.token);
+        navigate(Path.Home);
+      },
       onError: (error) => console.log(error),
     }
   );
 
   const onSubmit = handleSubmit((formData) => {
-    sinUpMutation.mutate(formData);
+    signInMutation.mutate(formData);
+    reset();
   });
 
   return (

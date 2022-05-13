@@ -1,10 +1,13 @@
-import { FC, Fragment } from 'react';
+import axios from 'axios';
+
+import { type FC, Fragment, useContext } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 
 import { Transition, Dialog } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/solid';
-import { useMutation } from 'react-query';
-import axios from 'axios';
+
+import { AuthContext } from '../../context/AuthProvider';
 
 interface ILogInDialog {
   isOpen: boolean;
@@ -17,26 +20,29 @@ interface ILogInForm {
 }
 
 export const LogInDialog: FC<ILogInDialog> = ({ isOpen, onClose }) => {
-  const {
-    register,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm<ILogInForm>({ mode: 'onSubmit' }); // TODO: validation
+  const { register, handleSubmit, reset } = useForm<ILogInForm>({ mode: 'onSubmit' }); // TODO: validation
+  const authContext = useContext(AuthContext);
 
-  const sinUpMutation = useMutation<unknown, unknown, ILogInForm>(
+  const signInMutation = useMutation<{ token: string }, unknown, ILogInForm>(
     (formData) =>
-      axios.post('signin', {
-        login: formData.login,
-        password: formData.password,
-      }),
+      axios
+        .post('signin', {
+          login: formData.login,
+          password: formData.password,
+        })
+        .then((response) => response.data),
     {
-      onSuccess: (data) => console.log(data),
+      onSuccess: (data) => {
+        authContext.setToken(data.token);
+      },
       onError: (error) => console.log(error),
     }
   );
 
   const onSubmit = handleSubmit((formData) => {
-    sinUpMutation.mutate(formData);
+    signInMutation.mutate(formData);
+    onClose();
+    reset();
   });
 
   return (

@@ -1,9 +1,11 @@
-import { Transition, Dialog } from '@headlessui/react';
-import { FC, Fragment } from 'react';
-import { XIcon } from '@heroicons/react/solid';
-import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import axios from 'axios';
+
+import { type FC, Fragment } from 'react';
+import { useMutation } from 'react-query';
+import { useForm } from 'react-hook-form';
+
+import { Transition, Dialog } from '@headlessui/react';
+import { XIcon } from '@heroicons/react/solid';
 
 interface ISignUpDialog {
   isOpen: boolean;
@@ -25,15 +27,11 @@ export const SignUpDialog: FC<ISignUpDialog> = ({ isOpen, onClose }) => {
 
   const sinUpMutation = useMutation<unknown, unknown, ISignUpForm>(
     (formData) =>
-      axios.post(
-        'signup',
-        {
-          login: formData.login,
-          name: formData.name,
-          password: formData.password,
-        }
-        // { headers: { 'Access-Control-Allow-Origin': '*' } }
-      ),
+      axios.post('signup', {
+        login: formData.login,
+        name: formData.name,
+        password: formData.password,
+      }),
     {
       onSuccess: (data) => console.log(data),
       onError: (error) => console.log(error),
@@ -81,7 +79,7 @@ export const SignUpDialog: FC<ISignUpDialog> = ({ isOpen, onClose }) => {
                 </Dialog.Title>
 
                 <form onSubmit={onSubmit}>
-                  <div className="mt-4">
+                  <div className="mt-4 space-y-4">
                     <div>
                       <label className="block">Login</label>
                       <input
@@ -100,7 +98,7 @@ export const SignUpDialog: FC<ISignUpDialog> = ({ isOpen, onClose }) => {
                         className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                       />
                     </div>
-                    <div className="mt-4">
+                    <div>
                       <label className="block">Password</label>
                       <input
                         type="text"
