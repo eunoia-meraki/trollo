@@ -5,10 +5,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Path } from '../../types';
 
 import { AuthContext } from '../../context/AuthProvider';
+import { useTranslation } from 'react-i18next';
 
 export const Welcome: FC = () => {
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const authContext = useContext(AuthContext);
 
   return (
@@ -22,7 +23,7 @@ export const Welcome: FC = () => {
               px-5 py-2.5 focus:outline-none"
             onClick={() => navigate(Path.SignUp)}
           >
-            Sign Up
+            {t('auth.signup')}
           </button>
           <button
             type="button"
@@ -31,12 +32,12 @@ export const Welcome: FC = () => {
             hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
             onClick={() => navigate(Path.SignIn)}
           >
-            Sign In
+            {t('auth.signin')}
           </button>
         </>
       )}
 
-      {authContext.token && <Link to={Path.Home}>Go to main page</Link>}
+      {authContext.token && <Link to={Path.Home}>{t('goToMainPage')}</Link>}
     </header>
   );
 };

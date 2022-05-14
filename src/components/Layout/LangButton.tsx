@@ -4,20 +4,16 @@ import { Fragment, type FC } from 'react';
 
 import { Menu, Transition } from '@headlessui/react';
 import { GlobeAltIcon } from '@heroicons/react/solid';
+import { useLanguage } from '../../hooks/useLanguage';
 
 export const LangButton: FC = () => {
-  const items = [
-    {
-      key: 'ru',
-      text: 'Русский',
-      onClick: () => {},
-    },
-    {
-      key: 'en',
-      text: 'English',
-      onClick: () => {},
-    },
-  ];
+  const { languages, setLanguage } = useLanguage();
+
+  const items = languages().map((lang) => ({
+    key: lang.key,
+    text: lang.text,
+    onClick: () => setLanguage(lang.key),
+  }));
 
   return (
     <Menu as="div" className={'relative'}>

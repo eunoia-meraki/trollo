@@ -9,6 +9,7 @@ import axios from 'axios';
 import { AuthContext } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { Path } from '../../types/enums';
+import { useTranslation } from 'react-i18next';
 
 interface ILogInForm {
   login: string;
@@ -16,6 +17,8 @@ interface ILogInForm {
 }
 
 export const SignIn: FC = () => {
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -52,28 +55,28 @@ export const SignIn: FC = () => {
   return (
     <main className="my-auto">
       <form onSubmit={onSubmit} className="max-w-md p-6 mx-auto">
-        <h3 className="text-xl font-bold text-center">Sign In</h3>
+        <h3 className="text-xl font-bold text-center">{t('auth.signinToTrollo')}</h3>
         <div>
-          <label className="block">Login</label>
+          <label className="block">{t('auth.login')}</label>
           <input
             type="text"
             {...register('login')}
-            placeholder="Login"
+            placeholder={t('auth.login')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
         <div className="mt-4">
-          <label className="block">Password</label>
+          <label className="block">{t('auth.password')}</label>
           <input
             type="text"
             {...register('password')}
-            placeholder="Password"
+            placeholder={t('auth.password')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
         <div className="flex items-baseline justify-between">
           <button className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900">
-            Sign In
+            {t('continue')}
           </button>
         </div>
       </form>

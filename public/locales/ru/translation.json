@@ -1,0 +1,18 @@
+{
+  "auth": {
+    "login": "Логин",
+    "logout": "Выйти",
+    "name": "Имя",
+    "password": "Пароль",
+    "signin": "Войти",
+    "signinToTrollo": "Вход в Trollo",
+    "signup": "Регистрация",
+    "signupToTrollo": "Регистрация на Trollo"
+  },
+  "continue": "Продолжить",
+  "footer": {
+    "authors": "Авторы",
+    "school": "Школа"
+  },
+  "goToMainPage": "Перейти на главную страницу"
+}

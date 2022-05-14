@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 interface ISignUpForm {
   name: string;
@@ -13,6 +14,8 @@ interface ISignUpForm {
 }
 
 export const SignUp: FC = () => {
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
@@ -43,31 +46,31 @@ export const SignUp: FC = () => {
   return (
     <main className="my-auto">
       <form onSubmit={onSubmit} className="max-w-md p-6 mx-auto">
-        <h3 className="text-xl font-bold text-center">Sign Up</h3>
+        <h3 className="text-xl font-bold text-center">{t('auth.signupToTrollo')}</h3>
         <div className="mt-4">
-          <label className="block">Login</label>
+          <label className="block">{t('auth.login')}</label>
           <input
             type="text"
             {...register('login')}
-            placeholder="Login"
+            placeholder={t('auth.login')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
         <div className="mt-4">
-          <label className="block">Name</label>
+          <label className="block">{t('auth.name')}</label>
           <input
             type="text"
             {...register('name')}
-            placeholder="Name"
+            placeholder={t('auth.name')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
         <div className="mt-4">
-          <label className="block">Password</label>
+          <label className="block">{t('auth.password')}</label>
           <input
             type="text"
             {...register('password')}
-            placeholder="Password"
+            placeholder={t('auth.password')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
           />
         </div>
@@ -76,7 +79,7 @@ export const SignUp: FC = () => {
             className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
             type="submit"
           >
-            Sign Up
+            {t('continue')}
           </button>
         </div>
       </form>

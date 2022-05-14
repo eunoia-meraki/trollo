@@ -1,0 +1,18 @@
+{
+  "auth": {
+    "login": "Login",
+    "logout": "Log out",
+    "name": "Name",
+    "password": "Password",
+    "signin": "Sign In",
+    "signinToTrollo": "Sign In to Trollo",
+    "signup": "Sign up",
+    "signupToTrollo": "Sign up to Trollo"
+  },
+  "continue": "Continue",
+  "footer": {
+    "authors": "Authors",
+    "school": "School"
+  },
+  "goToMainPage": "Go to main page"
+}

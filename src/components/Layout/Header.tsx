@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { type FC, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../../context/AuthProvider';
 import { LangButton } from './LangButton';
 
@@ -8,6 +9,8 @@ interface IHeader {
 }
 
 export const Header: FC<IHeader> = ({ isSticky = false }) => {
+  const { t } = useTranslation();
+
   const authContext = useContext(AuthContext);
   return (
     <div
@@ -27,7 +30,7 @@ export const Header: FC<IHeader> = ({ isSticky = false }) => {
             authContext.removeToken();
           }}
         >
-          Log out
+          {t('auth.logout')}
         </button>
         <button></button>
       </div>
