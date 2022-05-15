@@ -56,7 +56,7 @@ export const SignUp: FC = () => {
   return (
     <main>
       <form onSubmit={onSubmit} className="max-w-md p-6 mt-[10vh] mx-auto" noValidate>
-        <h3 className="text-xl font-bold text-center">{t('auth.signupToTrollo')}</h3>
+        <h3 className="text-xl font-bold text-center">{t('auth.signUp')}</h3>
 
         <div className="mt-4">
           <label className="block">{t('auth.login')}</label>
@@ -68,19 +68,19 @@ export const SignUp: FC = () => {
             {...register('login', {
               validate: (value) => {
                 if (value === '') {
-                  return 'Can not be empty';
+                  return t('validationErrors.fieldCanNotBeEmpty');
                 }
                 if (!/^[A-Za-z0-9_]*$/.test(value)) {
-                  return 'Must contain only latin letters, digits and undescores';
+                  return t('validationErrors.fieldMustContainOnlyLatinLetters');
                 }
                 if (!/[A-Z]/.test(value.charAt(0))) {
-                  return 'Must start with capital letter';
+                  return t('validationErrors.fieldMustStartWithCapitalLetter');
                 }
                 if (value.length < 4) {
-                  return 'Сan not be shorter than 4 characters';
+                  return t('validationErrors.fieldСanNotBeShorterThan4Characters');
                 }
                 if (value.length > 20) {
-                  return 'Сan not be longer than 20 characters';
+                  return t('validationErrors.fieldСanNotBeLongerThan20Characters');
                 }
               },
             })}
@@ -100,19 +100,19 @@ export const SignUp: FC = () => {
             {...register('name', {
               validate: (value) => {
                 if (value === '') {
-                  return 'Can not be empty';
+                  return t('validationErrors.fieldCanNotBeEmpty');
                 }
                 if (!/[A-ZА-Я]/.test(value.charAt(0))) {
-                  return 'Must start with capital letter';
+                  return t('validationErrors.fieldMustStartWithCapitalLetter');
                 }
                 if (!/^[A-Za-zА-Яа-я]*$/.test(value)) {
-                  return 'Must contain only letters';
+                  return t('validationErrors.fieldMustContainOnlyLetters');
                 }
                 if (value.length < 4) {
-                  return 'Can not be shorter than 4 characters';
+                  return t('validationErrors.fieldСanNotBeShorterThan4Characters');
                 }
                 if (value.length > 20) {
-                  return 'Can not be longer than 20 characters';
+                  return t('validationErrors.fieldСanNotBeLongerThan20Characters');
                 }
               },
             })}
@@ -133,22 +133,22 @@ export const SignUp: FC = () => {
               {...register('password', {
                 validate: (value) => {
                   if (value === '') {
-                    return 'Can not be empty';
+                    return t('validationErrors.fieldCanNotBeEmpty');
                   }
                   if (!/[A-Za-zА-Яа-я]/.test(value)) {
-                    return 'Must contain at least 1 letter';
+                    return t('validationErrors.fieldMustContainAtLeast1Letter');
                   }
                   if (!/[0-9]/.test(value)) {
-                    return 'Must contain at least 1 digit';
+                    return t('validationErrors.fieldMustContainAtLeast1Digit');
                   }
                   if (!/[_]/.test(value)) {
-                    return 'Must contain at least 1 undescore';
+                    return t('validationErrors.fieldMustContainAtLeast1Undescore');
                   }
                   if (value.length < 6) {
-                    return 'Can not be shorter than 6 characters';
+                    return t('validationErrors.fieldСanNotBeShorterThan6Characters');
                   }
                   if (value.length > 20) {
-                    return 'Can not be longer than 20 characters';
+                    return t('validationErrors.fieldСanNotBeLongerThan20Characters');
                   }
                 },
               })}

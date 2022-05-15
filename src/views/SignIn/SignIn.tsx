@@ -61,7 +61,7 @@ export const SignIn: FC = () => {
   return (
     <main>
       <form onSubmit={onSubmit} className="max-w-md p-6 mt-[10vh] mx-auto">
-        <h3 className="text-xl font-bold text-center">{t('auth.signinToTrollo')}</h3>
+        <h3 className="text-xl font-bold text-center">{t('auth.signIn')}</h3>
 
         <div>
           <label className="block">{t('auth.login')}</label>
@@ -73,7 +73,7 @@ export const SignIn: FC = () => {
             {...register('login', {
               required: {
                 value: true,
-                message: 'Can not be empty',
+                message: t('validationErrors.fieldCanNotBeEmpty'),
               },
             })}
             onChange={() => clearErrors('login')}
@@ -93,7 +93,7 @@ export const SignIn: FC = () => {
               {...register('password', {
                 required: {
                   value: true,
-                  message: 'Can not be empty',
+                  message: t('validationErrors.fieldCanNotBeEmpty'),
                 },
               })}
               onChange={() => clearErrors('password')}
