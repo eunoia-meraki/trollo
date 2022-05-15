@@ -2,10 +2,11 @@ import { type FC, useContext } from 'react';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useTranslation } from 'react-i18next';
+
 import { Path } from '../../types';
 
 import { AuthContext } from '../../context/AuthProvider';
-import { useTranslation } from 'react-i18next';
 
 export const Welcome: FC = () => {
   const navigate = useNavigate();
