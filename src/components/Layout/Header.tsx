@@ -16,7 +16,7 @@ export const Header: FC<IHeader> = ({ isSticky = false }) => {
     <div
       className={classNames(
         isSticky ? 'p-1' : 'p-2',
-        'shadow flex justify-center min-w-full bg-blue-50'
+        'shadow flex justify-center min-w-full bg-white'
       )}
     >
       <div className="container flex items-center gap-2 justify-end">

@@ -7,22 +7,27 @@
     "signIn": "Вход",
     "signUp": "Регистрация"
   },
+  "boards": "Доски",
+  "continue": "Продолжить",
+  "dummy": {
+    "NoBordsYet": "Нет ни одной доски. Добавьте хотя бы одну."
+  },
+  "footer": {
+    "authors": "Авторы",
+    "school": "Школа"
+  },
+  "goToMainPage": "Перейти на главную страницу",
+  "inputBoardTitle": "Введите название доски",
   "validationErrors": {
     "fieldCanNotBeEmpty": "Поле не может быть пустым",
-    "fieldСanNotBeLongerThan20Characters": "Поле не может быть длиннее 20 символов",
-    "fieldСanNotBeShorterThan4Characters": "Поле не может быть короче 4 символов",
-    "fieldСanNotBeShorterThan6Characters": "Поле не может быть короче 6 символов",
     "fieldMustContainAtLeast1Digit": "Поле должно содержать как минимум одну цифру",
     "fieldMustContainAtLeast1Letter": "Поле должно содержать как минимум одну букву",
     "fieldMustContainAtLeast1Undescore": "Поле должно содержать как минимум 1 символ '_'",
     "fieldMustContainOnlyLatinLetters": "Поле может содержать только латинские буквы, цифры и символы '_'",
     "fieldMustContainOnlyLetters": "Поле должно содержать только буквы",
-    "fieldMustStartWithCapitalLetter": "Поле должно начинаться с заглавной буквы"
-  },
-  "continue": "Продолжить",
-  "footer": {
-    "authors": "Авторы",
-    "school": "Школа"
-  },
-  "goToMainPage": "Перейти на главную страницу"
+    "fieldMustStartWithCapitalLetter": "Поле должно начинаться с заглавной буквы",
+    "fieldСanNotBeLongerThan20Characters": "Поле не может быть длиннее 20 символов",
+    "fieldСanNotBeShorterThan4Characters": "Поле не может быть короче 4 символов",
+    "fieldСanNotBeShorterThan6Characters": "Поле не может быть короче 6 символов"
+  }
 }

@@ -13,6 +13,7 @@ import { SignUp } from './views/SignUp';
 import { SignIn } from './views/SignIn';
 import { Error404 } from './views/Error404';
 import { Home } from './views/Home';
+import { Board } from './views/Board';
 
 import { AuthProvider } from './context/AuthProvider';
 import { NoAuthRedirectWrapper } from './components/NoAuthRedirectWrapper';
@@ -26,7 +27,7 @@ axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
 
 export const App: FC = () => {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-gray-100">
       <AuthProvider>
         <QueryClientProvider client={new QueryClient()}>
           <BrowserRouter>
@@ -38,6 +39,16 @@ export const App: FC = () => {
                     <RequireAuth>
                       <Layout>
                         <Home />
+                      </Layout>
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path={Path.Board}
+                  element={
+                    <RequireAuth>
+                      <Layout>
+                        <Board />
                       </Layout>
                     </RequireAuth>
                   }
