@@ -1,18 +1,26 @@
 import { type FC, useContext, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { useForm } from 'react-hook-form';
+
+import { useTranslation } from 'react-i18next';
+
+import toast from 'react-hot-toast';
 
 import { useMutation } from 'react-query';
 
-import axios from 'axios';
+import axios, { AxiosResponse, type AxiosError } from 'axios';
 
 import { AuthContext } from '../../context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
-import { Path } from '../../types/enums';
-import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
 
-interface ILogInForm {
+import { Path } from '../../types';
+
+type ErrorResponseData = { message: string; statusCode: number };
+
+type SuccessResponseData = { token: string };
+
+interface ISignInFrom {
   login: string;
   password: string;
 }
@@ -22,41 +30,53 @@ export const SignIn: FC = () => {
 
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
 
+  const { setToken } = useContext(AuthContext);
+
   const {
     register,
     handleSubmit,
     reset,
     clearErrors,
     formState: { errors },
-  } = useForm<ILogInForm>({ mode: 'onSubmit' }); // TODO: validation
-
-  const authContext = useContext(AuthContext);
+  } = useForm<ISignInFrom>();
 
   const navigate = useNavigate();
 
-  const signInMutation = useMutation<{ token: string }, unknown, ILogInForm>(
-    (formData) =>
-      axios
-        .post('signin', {
-          login: formData.login,
-          password: formData.password,
-        })
-        .then((response) => response.data),
-    {
-      onSuccess: (data) => {
-        authContext.setToken(data.token);
-        navigate(Path.Home);
-      },
-      onError: (error) => console.log(error),
-    }
+  const { mutate } = useMutation<
+    AxiosResponse<SuccessResponseData>,
+    AxiosError<ErrorResponseData>,
+    ISignInFrom
+  >(({ login, password }) =>
+    axios.post('signin', {
+      login: login,
+      password: password,
+    })
   );
 
   const onSubmit = handleSubmit((formData) => {
-    signInMutation.mutate(formData);
-    reset();
-  });
+    const mutatePromise = new Promise((resolve, reject) => {
+      mutate(formData, {
+        onSuccess: ({ data: { token } }) => {
+          reset();
 
-  const submitIsDisabled = !!errors.login || !!errors.password;
+          setToken(token);
+
+          navigate(Path.Home);
+
+          resolve(null);
+        },
+        onError: (error) => {
+          reject(error.response?.data.message);
+        },
+      });
+    });
+
+    toast.promise(mutatePromise, {
+      loading: t('toasterMessages.pending'),
+      success: t('toasterMessages.success'),
+      error: (error: string) => error,
+    });
+  });
 
   return (
     <main>
@@ -126,13 +146,7 @@ export const SignIn: FC = () => {
         <div className="flex items-baseline justify-between">
           <button
             type="submit"
-            className={classNames(
-              'px-6 py-2 mt-4',
-              submitIsDisabled
-                ? 'text-gray-900 bg-gray-100 rounded-lg border-gray-200'
-                : 'text-white bg-blue-600 rounded-lg hover:bg-blue-900'
-            )}
-            disabled={submitIsDisabled}
+            className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
           >
             {t('continue')}
           </button>

@@ -20,6 +20,7 @@ import { NoAuthRedirectWrapper } from './components/NoAuthRedirectWrapper';
 import { Layout } from './components/Layout';
 import { RequireAuth } from './components/RequireAuth';
 import { Footer } from './components/Footer';
+import { Toaster } from './components/Toaster';
 
 import './App.css';
 
@@ -65,6 +66,8 @@ export const App: FC = () => {
       </AuthProvider>
 
       <Footer />
+
+      <Toaster />
     </div>
   );
 };

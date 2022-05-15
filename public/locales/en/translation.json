@@ -18,16 +18,20 @@
   },
   "goToMainPage": "Go to main page",
   "inputBoardTitle": "Input board title",
+  "toasterMessages": {
+    "success": "Success!",
+    "pending": "Pending..."
+  },
   "validationErrors": {
     "fieldCanNotBeEmpty": "Field can not be empty",
+    "fieldСanNotBeLongerThan20Characters": "Field can not be longer than 20 characters",
+    "fieldСanNotBeShorterThan4Characters": "Field can not be shorter than 4 characters",
+    "fieldСanNotBeShorterThan6Characters": "Field can not be shorter than 6 characters",
     "fieldMustContainAtLeast1Digit": "Field must contain at least 1 digit",
     "fieldMustContainAtLeast1Letter": "Field must contain at least 1 letter",
     "fieldMustContainAtLeast1Undescore": "Field must contain at least 1 undescore",
     "fieldMustContainOnlyLatinLetters": "Field must contain only latin letters, digits and undescores",
     "fieldMustContainOnlyLetters": "Field must contain only letters",
-    "fieldMustStartWithCapitalLetter": "Field must start with capital letter",
-    "fieldСanNotBeLongerThan20Characters": "Field can not be longer than 20 characters",
-    "fieldСanNotBeShorterThan4Characters": "Field can not be shorter than 4 characters",
-    "fieldСanNotBeShorterThan6Characters": "Field can not be shorter than 6 characters"
+    "fieldMustStartWithCapitalLetter": "Field must start with capital letter"
   }
 }

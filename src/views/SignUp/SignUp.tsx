@@ -6,9 +6,11 @@ import { useTranslation } from 'react-i18next';
 
 import { useMutation } from 'react-query';
 
-import axios from 'axios';
+import toast from 'react-hot-toast';
 
-import classNames from 'classnames';
+import axios, { type AxiosError } from 'axios';
+
+type ErrorResponseData = { message: string; statusCode: number };
 
 interface ISignUpForm {
   name: string;
@@ -27,31 +29,42 @@ export const SignUp: FC = () => {
     formState: { errors },
     clearErrors,
     reset,
-  } = useForm<ISignUpForm>(); // TODO: validation
+  } = useForm<ISignUpForm>();
 
-  const sinUpMutation = useMutation<unknown, unknown, ISignUpForm>(
-    (formData) =>
+  const { mutate } = useMutation<unknown, AxiosError<ErrorResponseData>, ISignUpForm>(
+    ({ login, name, password }) =>
       axios.post(
         'signup',
         {
-          login: formData.login,
-          name: formData.name,
-          password: formData.password,
+          login: login,
+          name: name,
+          password: password,
         }
+        // TODO: what to do with that?
         // { headers: { 'Access-Control-Allow-Origin': '*' } }
-      ),
-    {
-      onSuccess: (data) => console.log(data),
-      onError: (error) => console.log(error),
-    }
+      )
   );
 
   const onSubmit = handleSubmit((formData) => {
-    sinUpMutation.mutate(formData);
-    reset();
-  });
+    const mutatePromise = new Promise((resolve, reject) => {
+      mutate(formData, {
+        onSuccess: () => {
+          reset();
 
-  const submitIsDisabled = !!errors.login || !!errors.password || !!errors.name;
+          resolve(null);
+        },
+        onError: (error) => {
+          reject(error.response?.data.message);
+        },
+      });
+    });
+
+    toast.promise(mutatePromise, {
+      loading: t('toasterMessages.pending'),
+      success: t('toasterMessages.success'),
+      error: (error: string) => error,
+    });
+  });
 
   return (
     <main>
@@ -155,6 +168,8 @@ export const SignUp: FC = () => {
               onChange={() => clearErrors('password')}
             />
 
+            {/* TODO: refactor svg */}
+
             <div
               className="absolute right-2 top-5 cursor-pointer"
               onClick={() => setPasswordIsHidden((prev) => !prev)}
@@ -182,13 +197,7 @@ export const SignUp: FC = () => {
         <div className="flex items-baseline justify-between">
           <button
             type="submit"
-            className={classNames(
-              'px-6 py-2 mt-4',
-              submitIsDisabled
-                ? 'text-gray-900 bg-gray-100 rounded-lg border-gray-200'
-                : 'text-white bg-blue-600 rounded-lg hover:bg-blue-900'
-            )}
-            disabled={submitIsDisabled}
+            className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
           >
             {t('continue')}
           </button>
