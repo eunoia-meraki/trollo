@@ -18,7 +18,6 @@ import { Board } from './views/Board';
 import { AuthProvider } from './context/AuthProvider';
 import { NoAuthRedirectWrapper } from './components/NoAuthRedirectWrapper';
 import { Layout } from './components/Layout';
-import { RequireAuth } from './components/RequireAuth';
 import { Footer } from './components/Footer';
 import { Toaster } from './components/Toaster';
 
@@ -34,26 +33,10 @@ export const App: FC = () => {
           <BrowserRouter>
             <NoAuthRedirectWrapper>
               <Routes>
-                <Route
-                  path={Path.Home}
-                  element={
-                    <RequireAuth>
-                      <Layout>
-                        <Home />
-                      </Layout>
-                    </RequireAuth>
-                  }
-                />
-                <Route
-                  path={Path.Board}
-                  element={
-                    <RequireAuth>
-                      <Layout>
-                        <Board />
-                      </Layout>
-                    </RequireAuth>
-                  }
-                />
+                <Route path={Path.Home} element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path={Path.Board} element={<Board />} />
+                </Route>
                 <Route path={Path.Welcome} element={<Welcome />} />
                 <Route path={Path.SignUp} element={<SignUp />} />
                 <Route path={Path.SignIn} element={<SignIn />} />
