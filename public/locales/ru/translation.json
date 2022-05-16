@@ -19,8 +19,10 @@
   "goToMainPage": "Перейти на главную страницу",
   "inputBoardTitle": "Введите название доски",
   "toasterMessages": {
-    "success": "Успешно!",
-    "pending": "Ожидаем..."
+    "signInSuccess": "Успешно! Теперь войдите",
+    "suchLoginAlreadyExists": "Такой логин уже существует",
+    "unknownError": "Неизвестная ошибка",
+    "userIsNotFound": "Пользователь не найден"
   },
   "validationErrors": {
     "fieldCanNotBeEmpty": "Поле не может быть пустым",

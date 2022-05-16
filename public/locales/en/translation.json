@@ -19,8 +19,10 @@
   "goToMainPage": "Go to main page",
   "inputBoardTitle": "Input board title",
   "toasterMessages": {
-    "success": "Success!",
-    "pending": "Pending..."
+    "signInSuccess": "Success! Now sign in",
+    "suchLoginAlreadyExists": "Such login already exists",
+    "unknownError": "Unknown error",
+    "userIsNotFound": "User is not found"
   },
   "validationErrors": {
     "fieldCanNotBeEmpty": "Field can not be empty",

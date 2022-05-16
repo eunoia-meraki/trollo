@@ -1,4 +1,4 @@
-import { type FC, useContext, useState } from 'react';
+import { type FC, useContext, useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -10,15 +10,11 @@ import toast from 'react-hot-toast';
 
 import { useMutation } from 'react-query';
 
-import axios, { AxiosResponse, type AxiosError } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 import { AuthContext } from '../../context/AuthProvider';
 
 import { Path } from '../../types';
-
-type ErrorResponseData = { message: string; statusCode: number };
-
-type SuccessResponseData = { token: string };
 
 interface ISignInFrom {
   login: string;
@@ -28,53 +24,43 @@ interface ISignInFrom {
 export const SignIn: FC = () => {
   const { t } = useTranslation();
 
-  const [passwordIsHidden, setPasswordIsHidden] = useState(true);
+  const { token, setToken } = useContext(AuthContext);
 
-  const { setToken } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate(Path.Home);
+    }
+  });
+
+  const [passwordIsHidden, setPasswordIsHidden] = useState(true);
 
   const {
     register,
     handleSubmit,
-    reset,
     clearErrors,
     formState: { errors },
   } = useForm<ISignInFrom>();
 
-  const navigate = useNavigate();
-
-  const { mutate } = useMutation<
-    AxiosResponse<SuccessResponseData>,
-    AxiosError<ErrorResponseData>,
-    ISignInFrom
-  >(({ login, password }) =>
-    axios.post('signin', {
-      login: login,
-      password: password,
-    })
+  const { mutate, isLoading } = useMutation<AxiosResponse<{ token: string }>, unknown, ISignInFrom>(
+    ({ login, password }) =>
+      axios.post('signin', {
+        login: login,
+        password: password,
+      })
   );
 
   const onSubmit = handleSubmit((formData) => {
-    const mutatePromise = new Promise((resolve, reject) => {
-      mutate(formData, {
-        onSuccess: ({ data: { token } }) => {
-          reset();
+    mutate(formData, {
+      onSuccess: ({ data: { token } }) => {
+        setToken(token);
 
-          setToken(token);
-
-          navigate(Path.Home);
-
-          resolve(null);
-        },
-        onError: (error) => {
-          reject(error.response?.data.message);
-        },
-      });
-    });
-
-    toast.promise(mutatePromise, {
-      loading: t('toasterMessages.pending'),
-      success: t('toasterMessages.success'),
-      error: (error: string) => error,
+        navigate(Path.Home);
+      },
+      onError: () => {
+        toast.error(t('toasterMessages.userIsNotFound'));
+      },
     });
   });
 
@@ -119,6 +105,8 @@ export const SignIn: FC = () => {
               onChange={() => clearErrors('password')}
             />
 
+            {/* TODO: refactor svg */}
+
             <div
               className="absolute right-2 top-5 cursor-pointer"
               onClick={() => setPasswordIsHidden((prev) => !prev)}
@@ -143,14 +131,37 @@ export const SignIn: FC = () => {
           )}
         </div>
 
-        <div className="flex items-baseline justify-between">
-          <button
-            type="submit"
-            className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
-          >
-            {t('continue')}
-          </button>
-        </div>
+        {/* TODO: refactor svg */}
+
+        <button
+          type="submit"
+          className="flex items-center justify-center w-40 h-10 mt-4 rounded-lg text-white bg-blue-600 hover:bg-blue-900 "
+        >
+          {isLoading ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          ) : (
+            t('continue')
+          )}
+        </button>
       </form>
     </main>
   );

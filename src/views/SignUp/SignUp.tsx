@@ -1,6 +1,8 @@
-import { type FC, useState } from 'react';
+import { type FC, useState, useEffect, useContext } from 'react';
 
 import { useForm } from 'react-hook-form';
+
+import { useNavigate } from 'react-router-dom';
 
 import { useTranslation } from 'react-i18next';
 
@@ -8,9 +10,11 @@ import { useMutation } from 'react-query';
 
 import toast from 'react-hot-toast';
 
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
 
-type ErrorResponseData = { message: string; statusCode: number };
+import { Path } from '../../types';
+
+import { AuthContext } from '../../context/AuthProvider';
 
 interface ISignUpForm {
   name: string;
@@ -21,6 +25,16 @@ interface ISignUpForm {
 export const SignUp: FC = () => {
   const { t } = useTranslation();
 
+  const { token } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate(Path.Home);
+    }
+  });
+
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
 
   const {
@@ -28,10 +42,9 @@ export const SignUp: FC = () => {
     handleSubmit,
     formState: { errors },
     clearErrors,
-    reset,
   } = useForm<ISignUpForm>();
 
-  const { mutate } = useMutation<unknown, AxiosError<ErrorResponseData>, ISignUpForm>(
+  const { mutate, isLoading } = useMutation<unknown, unknown, ISignUpForm>(
     ({ login, name, password }) =>
       axios.post(
         'signup',
@@ -46,23 +59,15 @@ export const SignUp: FC = () => {
   );
 
   const onSubmit = handleSubmit((formData) => {
-    const mutatePromise = new Promise((resolve, reject) => {
-      mutate(formData, {
-        onSuccess: () => {
-          reset();
+    mutate(formData, {
+      onSuccess: () => {
+        toast.success(t('toasterMessages.signInSuccess'));
 
-          resolve(null);
-        },
-        onError: (error) => {
-          reject(error.response?.data.message);
-        },
-      });
-    });
-
-    toast.promise(mutatePromise, {
-      loading: t('toasterMessages.pending'),
-      success: t('toasterMessages.success'),
-      error: (error: string) => error,
+        navigate(Path.SignIn);
+      },
+      onError: () => {
+        toast.error(t('toasterMessages.suchLoginAlreadyExists'));
+      },
     });
   });
 
@@ -194,14 +199,37 @@ export const SignUp: FC = () => {
           )}
         </div>
 
-        <div className="flex items-baseline justify-between">
-          <button
-            type="submit"
-            className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
-          >
-            {t('continue')}
-          </button>
-        </div>
+        {/* TODO: refactor svg */}
+
+        <button
+          type="submit"
+          className="flex items-center justify-center w-40 h-10 mt-4 rounded-lg text-white bg-blue-600 hover:bg-blue-900 "
+        >
+          {isLoading ? (
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          ) : (
+            t('continue')
+          )}
+        </button>
       </form>
     </main>
   );
