@@ -13,7 +13,7 @@ import { Header } from './Header';
 export const Layout: FC = () => {
   return (
     <RequireAuth>
-      <StickyContainer className="min-w-full grow">
+      <>
         <Sticky>
           {({ style, isSticky }) => (
             <div className="min-w-full" style={style}>
@@ -21,10 +21,10 @@ export const Layout: FC = () => {
             </div>
           )}
         </Sticky>
-        <div className="container mx-auto my-2 p-2 bg-white border">
+        <div className="container grow mx-auto my-2 p-2 h-full bg-white border">
           <Outlet />
         </div>
-      </StickyContainer>
+      </>
     </RequireAuth>
   );
 };

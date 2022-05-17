@@ -12,7 +12,8 @@ export const Error404: FC = () => {
     items-center
     justify-center
     w-screen
-    h-screen
+    h-full
+    grow
     bg-gradient-to-r
     from-gray-500
     to-gray-200

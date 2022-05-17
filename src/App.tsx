@@ -22,12 +22,13 @@ import { Footer } from './components/Footer';
 import { Toaster } from './components/Toaster';
 
 import './App.css';
+import { StickyContainer } from 'react-sticky';
 
 axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
 
 export const App: FC = () => {
   return (
-    <div className="h-screen flex flex-col bg-gray-100">
+    <StickyContainer className="min-h-screen flex flex-col bg-gray-100 min-w-full">
       <AuthProvider>
         <QueryClientProvider client={new QueryClient()}>
           <BrowserRouter>
@@ -47,11 +48,9 @@ export const App: FC = () => {
           </BrowserRouter>
         </QueryClientProvider>
       </AuthProvider>
-
       <Footer />
-
       <Toaster />
-    </div>
+    </StickyContainer>
   );
 };
 
