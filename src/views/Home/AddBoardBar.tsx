@@ -43,7 +43,7 @@ export const AddBoardBar: FC = () => {
   );
 
   const onSubmit = handleSubmit((data) => {
-    isValid && addBoardMutation.mutate(data);
+    addBoardMutation.mutate(data);
   });
 
   return (
