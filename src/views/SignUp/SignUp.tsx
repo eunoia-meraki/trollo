@@ -73,7 +73,7 @@ export const SignUp: FC = () => {
 
   return (
     <main>
-      <form onSubmit={onSubmit} className="max-w-md p-6 mt-[10vh] mx-auto" noValidate>
+      <form onSubmit={onSubmit} className="max-w-md p-6 mt-[10vh] mx-auto">
         <h3 className="text-xl font-bold text-center">{t('auth.signUp')}</h3>
 
         <div className="mt-4">
@@ -146,6 +146,7 @@ export const SignUp: FC = () => {
           <div className="relative">
             <input
               type={passwordIsHidden ? 'password' : 'text'}
+              autoComplete="new-password"
               placeholder={t('auth.password')}
               className="w-full pl-4 pr-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               {...register('password', {

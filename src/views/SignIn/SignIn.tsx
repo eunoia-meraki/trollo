@@ -81,8 +81,8 @@ export const SignIn: FC = () => {
                 value: true,
                 message: t('validationErrors.fieldCanNotBeEmpty'),
               },
+              onChange: () => clearErrors('login'),
             })}
-            onChange={() => clearErrors('login')}
           />
 
           {errors.login && <span className="text-red-500 text-sm">{errors.login.message}</span>}
@@ -101,8 +101,8 @@ export const SignIn: FC = () => {
                   value: true,
                   message: t('validationErrors.fieldCanNotBeEmpty'),
                 },
+                onChange: () => clearErrors('password'),
               })}
-              onChange={() => clearErrors('password')}
             />
 
             {/* TODO: refactor svg */}
