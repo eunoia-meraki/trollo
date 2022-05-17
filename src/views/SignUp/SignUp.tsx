@@ -25,12 +25,12 @@ interface ISignUpForm {
 export const SignUp: FC = () => {
   const { t } = useTranslation();
 
-  const { token } = useContext(AuthContext);
+  const { authInfo } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token) {
+    if (authInfo?.token) {
       navigate(Path.Home);
     }
   });

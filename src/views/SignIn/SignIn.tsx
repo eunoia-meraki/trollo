@@ -24,12 +24,12 @@ interface ISignInFrom {
 export const SignIn: FC = () => {
   const { t } = useTranslation();
 
-  const { token, setToken } = useContext(AuthContext);
+  const { authInfo, setToken } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (token) {
+    if (authInfo?.token) {
       navigate(Path.Home);
     }
   });

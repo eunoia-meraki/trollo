@@ -11,11 +11,11 @@ import { AuthContext } from '../../context/AuthProvider';
 export const Welcome: FC = () => {
   const { t } = useTranslation();
 
-  const { token } = useContext(AuthContext);
+  const { authInfo } = useContext(AuthContext);
 
   return (
     <header className="container p-3 flex justify-end items-center gap-2">
-      {!token && (
+      {!authInfo && (
         <>
           <Link
             to={Path.SignUp}
@@ -36,7 +36,7 @@ export const Welcome: FC = () => {
         </>
       )}
 
-      {token && <Link to={Path.Home}>{t('goToMainPage')}</Link>}
+      {authInfo && <Link to={Path.Home}>{t('goToMainPage')}</Link>}
     </header>
   );
 };
