@@ -7,13 +7,13 @@ import { useNavigate } from 'react-router-dom';
 
 import _ from 'lodash';
 
-import { BoardsData } from '../../interfaces';
+import { APIBoardsData } from '../../interfaces';
 import { AddBoardBar } from './AddBoardBar';
 import { RemoveBoardButton } from './RemoveBoardButton';
 import { Path } from '../../types';
 
 export const Home: FC = () => {
-  const { data: boards, isLoading } = useQuery<BoardsData>('boards', () =>
+  const { data: boards, isLoading } = useQuery<APIBoardsData>('boards', () =>
     axios.get('boards').then((response) => response.data)
   );
 

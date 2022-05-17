@@ -8,10 +8,7 @@ import { t } from 'i18next';
 
 import { PlusIcon } from '@heroicons/react/solid';
 import { useTranslation } from 'react-i18next';
-
-interface IAddBoardForm {
-  title: string;
-}
+import { APIAddBoardPayload } from '../../interfaces';
 
 export const AddBoardBar: FC = () => {
   const { t } = useTranslation();
@@ -21,13 +18,13 @@ export const AddBoardBar: FC = () => {
     handleSubmit,
     reset,
     formState: { errors, isValid },
-  } = useForm<IAddBoardForm>({
+  } = useForm<APIAddBoardPayload>({
     mode: 'onSubmit',
     shouldUseNativeValidation: false,
   });
   const queryClient = useQueryClient();
 
-  const addBoardMutation = useMutation<unknown, unknown, IAddBoardForm>(
+  const addBoardMutation = useMutation<unknown, unknown, APIAddBoardPayload>(
     (formData) =>
       axios.post('boards', {
         title: formData.title,

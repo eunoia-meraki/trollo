@@ -5,7 +5,7 @@ import axios from 'axios';
 import classNames from 'classnames';
 
 import { TrashIcon } from '@heroicons/react/solid';
-import { BoardsData } from '../../interfaces';
+import { APIBoardsData } from '../../interfaces';
 
 interface IRemoveBoardButton {
   boardId: string;
@@ -17,7 +17,7 @@ export const RemoveBoardButton: FC<IRemoveBoardButton> = ({ boardId }) => {
 
   const removeBoardMutation = useMutation(() => axios.delete(`boards/${boardId}`), {
     onSuccess: () => {
-      queryClient.setQueryData<BoardsData>(
+      queryClient.setQueryData<APIBoardsData>(
         'boards',
         (old) => old?.filter((board) => board.id != boardId) || []
       );
