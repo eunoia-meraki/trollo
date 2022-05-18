@@ -41,3 +41,7 @@ export interface APITaskData {
   boardId: string;
   columnId: string;
 }
+
+export interface APIError {
+  message: string;
+}

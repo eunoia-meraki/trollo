@@ -1,5 +1,6 @@
 {
   "auth": {
+    "editProfile": "Редактирования профиля",
     "login": "Логин",
     "logout": "Выйти",
     "name": "Имя",
@@ -8,13 +9,13 @@
     "signUp": "Регистрация"
   },
   "boards": "Доски",
-  "continue": "Продолжить",
   "confirmationModal": {
     "areYouSureYouWantTo": "Вы уверены, что хотите",
     "deleteBoard": "удалить доску",
     "no": "Нет",
     "yes": "Да"
   },
+  "continue": "Продолжить",
   "dummy": {
     "NoBordsYet": "Нет ни одной доски. Добавьте хотя бы одну."
   },
@@ -25,6 +26,7 @@
   "goToMainPage": "Перейти на главную страницу",
   "inputBoardTitle": "Введите название доски",
   "toasterMessages": {
+    "editProfileSuccess": "Успешно! Профиль изменен. Зайди пожалуйста заново.",
     "signInSuccess": "Успешно! Теперь войдите",
     "suchLoginAlreadyExists": "Такой логин уже существует",
     "unknownError": "Неизвестная ошибка",
@@ -32,14 +34,14 @@
   },
   "validationErrors": {
     "fieldCanNotBeEmpty": "Поле не может быть пустым",
-    "fieldСanNotBeLongerThan20Characters": "Поле не может быть длиннее 20 символов",
-    "fieldСanNotBeShorterThan4Characters": "Поле не может быть короче 4 символов",
-    "fieldСanNotBeShorterThan6Characters": "Поле не может быть короче 6 символов",
     "fieldMustContainAtLeast1Digit": "Поле должно содержать как минимум 1 цифру",
     "fieldMustContainAtLeast1Letter": "Поле должно содержать как минимум 1 букву",
     "fieldMustContainAtLeast1Undescore": "Поле должно содержать как минимум 1 символ '_'",
     "fieldMustContainOnlyLatinLetters": "Поле может содержать только латинские буквы, цифры и символы '_'",
     "fieldMustContainOnlyLetters": "Поле должно содержать только буквы",
-    "fieldMustStartWithCapitalLetter": "Поле должно начинаться с заглавной буквы"
+    "fieldMustStartWithCapitalLetter": "Поле должно начинаться с заглавной буквы",
+    "fieldСanNotBeLongerThan20Characters": "Поле не может быть длиннее 20 символов",
+    "fieldСanNotBeShorterThan4Characters": "Поле не может быть короче 4 символов",
+    "fieldСanNotBeShorterThan6Characters": "Поле не может быть короче 6 символов"
   }
 }

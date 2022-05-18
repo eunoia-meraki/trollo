@@ -1,5 +1,6 @@
 {
   "auth": {
+    "editProfile": "Edit Profile",
     "login": "Login",
     "logout": "Log out",
     "name": "Name",
@@ -25,6 +26,7 @@
   "goToMainPage": "Go to main page",
   "inputBoardTitle": "Input board title",
   "toasterMessages": {
+    "editProfileSuccess": "Success! Profile edited. SignIn again pls.",
     "signInSuccess": "Success! Now sign in",
     "suchLoginAlreadyExists": "Such login already exists",
     "unknownError": "Unknown error",
@@ -32,14 +34,14 @@
   },
   "validationErrors": {
     "fieldCanNotBeEmpty": "Field can not be empty",
-    "fieldСanNotBeLongerThan20Characters": "Field can not be longer than 20 characters",
-    "fieldСanNotBeShorterThan4Characters": "Field can not be shorter than 4 characters",
-    "fieldСanNotBeShorterThan6Characters": "Field can not be shorter than 6 characters",
     "fieldMustContainAtLeast1Digit": "Field must contain at least 1 digit",
     "fieldMustContainAtLeast1Letter": "Field must contain at least 1 letter",
     "fieldMustContainAtLeast1Undescore": "Field must contain at least 1 undescore",
     "fieldMustContainOnlyLatinLetters": "Field must contain only latin letters, digits and undescores",
     "fieldMustContainOnlyLetters": "Field must contain only letters",
-    "fieldMustStartWithCapitalLetter": "Field must start with capital letter"
+    "fieldMustStartWithCapitalLetter": "Field must start with capital letter",
+    "fieldСanNotBeLongerThan20Characters": "Field can not be longer than 20 characters",
+    "fieldСanNotBeShorterThan4Characters": "Field can not be shorter than 4 characters",
+    "fieldСanNotBeShorterThan6Characters": "Field can not be shorter than 6 characters"
   }
 }

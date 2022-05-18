@@ -5,5 +5,6 @@ export enum Path {
   Error404 = '/error404',
   SignUp = '/signup',
   SignIn = '/signin',
+  EditProfile = '/editprofile',
   Any = '*',
 }

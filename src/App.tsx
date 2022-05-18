@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { StickyContainer } from 'react-sticky';
 
 import { StickyContainer } from 'react-sticky';
 
@@ -16,6 +17,7 @@ import { SignIn } from './views/SignIn';
 import { Error404 } from './views/Error404';
 import { Home } from './views/Home';
 import { Board } from './views/Board';
+import { EditProfile } from './views/EditProfile';
 
 import { AuthProvider } from './context/AuthProvider';
 import { NoAuthRedirectWrapper } from './components/NoAuthRedirectWrapper';
@@ -42,6 +44,7 @@ export const App: FC = () => {
                     <Route path={Path.Board} element={<Board />} />
                   </Route>
                   <Route path={Path.Welcome} element={<Welcome />} />
+                  <Route path={Path.EditProfile} element={<EditProfile />} />
                   <Route path={Path.SignUp} element={<SignUp />} />
                   <Route path={Path.SignIn} element={<SignIn />} />
                   <Route path={Path.Error404} element={<Error404 />} />
