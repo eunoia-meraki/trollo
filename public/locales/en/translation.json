@@ -9,6 +9,12 @@
   },
   "boards": "Boards",
   "continue": "Continue",
+  "confirmationModal": {
+    "areYouSureYouWantTo": "Are you sure you want to",
+    "deleteBoard": "delete board",
+    "no": "No",
+    "yes": "Yes"
+  },
   "dummy": {
     "NoBordsYet": "No boards yet. Add at least one."
   },

@@ -9,6 +9,12 @@
   },
   "boards": "Доски",
   "continue": "Продолжить",
+  "confirmationModal": {
+    "areYouSureYouWantTo": "Вы уверены, что хотите",
+    "deleteBoard": "удалить доску",
+    "no": "Нет",
+    "yes": "Да"
+  },
   "dummy": {
     "NoBordsYet": "Нет ни одной доски. Добавьте хотя бы одну."
   },
@@ -29,8 +35,8 @@
     "fieldСanNotBeLongerThan20Characters": "Поле не может быть длиннее 20 символов",
     "fieldСanNotBeShorterThan4Characters": "Поле не может быть короче 4 символов",
     "fieldСanNotBeShorterThan6Characters": "Поле не может быть короче 6 символов",
-    "fieldMustContainAtLeast1Digit": "Поле должно содержать как минимум одну цифру",
-    "fieldMustContainAtLeast1Letter": "Поле должно содержать как минимум одну букву",
+    "fieldMustContainAtLeast1Digit": "Поле должно содержать как минимум 1 цифру",
+    "fieldMustContainAtLeast1Letter": "Поле должно содержать как минимум 1 букву",
     "fieldMustContainAtLeast1Undescore": "Поле должно содержать как минимум 1 символ '_'",
     "fieldMustContainOnlyLatinLetters": "Поле может содержать только латинские буквы, цифры и символы '_'",
     "fieldMustContainOnlyLetters": "Поле должно содержать только буквы",
