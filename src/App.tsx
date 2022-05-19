@@ -25,6 +25,7 @@ import { Toaster } from './components/Toaster';
 import { ConfirmationModalProvider } from './components/ConfirmationModalProvider';
 
 import './App.css';
+import { AuthLayout } from './components/AuthLayout';
 
 axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
 
@@ -42,9 +43,30 @@ export const App: FC = () => {
                     <Route path={Path.Board} element={<Board />} />
                   </Route>
                   <Route path={Path.Welcome} element={<Welcome />} />
-                  <Route path={Path.EditProfile} element={<EditProfile />} />
-                  <Route path={Path.SignUp} element={<SignUp />} />
-                  <Route path={Path.SignIn} element={<SignIn />} />
+                  <Route
+                    path={Path.EditProfile}
+                    element={
+                      <AuthLayout>
+                        <EditProfile />
+                      </AuthLayout>
+                    }
+                  />
+                  <Route
+                    path={Path.SignUp}
+                    element={
+                      <AuthLayout>
+                        <SignUp />
+                      </AuthLayout>
+                    }
+                  />
+                  <Route
+                    path={Path.SignIn}
+                    element={
+                      <AuthLayout>
+                        <SignIn />
+                      </AuthLayout>
+                    }
+                  />
                   <Route path={Path.Error404} element={<Error404 />} />
                   <Route path={Path.Any} element={<Navigate to={Path.Error404} replace />} />
                 </Routes>

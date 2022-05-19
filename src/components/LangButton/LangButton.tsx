@@ -4,6 +4,7 @@ import { Fragment, type FC } from 'react';
 
 import { Menu, Transition } from '@headlessui/react';
 import { GlobeAltIcon } from '@heroicons/react/solid';
+
 import { useLanguage } from '../../hooks/useLanguage';
 
 export const LangButton: FC = () => {

@@ -9,13 +9,15 @@
     "signUp": "Sign Up"
   },
   "boards": "Boards",
-  "continue": "Continue",
   "confirmationModal": {
     "areYouSureYouWantTo": "Are you sure you want to",
     "deleteBoard": "delete board",
+    "deleteProfile": "delete profile",
     "no": "No",
     "yes": "Yes"
   },
+  "continue": "Continue",
+  "deleteProfile": "Delete profile",
   "dummy": {
     "NoBordsYet": "No boards yet. Add at least one."
   },
@@ -26,7 +28,7 @@
   "goToMainPage": "Go to main page",
   "inputBoardTitle": "Input board title",
   "toasterMessages": {
-    "editProfileSuccess": "Success! Profile edited. SignIn again pls.",
+    "editProfileSuccess": "Success! Profile edited. SignIn again please.",
     "signInSuccess": "Success! Now sign in",
     "suchLoginAlreadyExists": "Such login already exists",
     "unknownError": "Unknown error",

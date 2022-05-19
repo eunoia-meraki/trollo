@@ -3,8 +3,7 @@ import classNames from 'classnames';
 import { type FC } from 'react';
 
 import { LangButton } from '../LangButton';
-import { Logo } from '../Logo/Logo';
-import { UserButton } from './UserButton';
+import { Logo } from '../Logo';
 
 interface IHeader {
   isSticky?: boolean;
@@ -20,10 +19,7 @@ export const Header: FC<IHeader> = ({ isSticky = false }) => {
     >
       <div className="container flex items-center gap-2 justify-between">
         <Logo />
-        <div className="flex items-center gap-2">
-          <LangButton />
-          <UserButton />
-        </div>
+        <LangButton />
       </div>
     </div>
   );

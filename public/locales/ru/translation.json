@@ -12,10 +12,12 @@
   "confirmationModal": {
     "areYouSureYouWantTo": "Вы уверены, что хотите",
     "deleteBoard": "удалить доску",
+    "deleteProfile": "Удалить профиль",
     "no": "Нет",
     "yes": "Да"
   },
   "continue": "Продолжить",
+  "deleteProfile": "Удалить профиль",
   "dummy": {
     "NoBordsYet": "Нет ни одной доски. Добавьте хотя бы одну."
   },

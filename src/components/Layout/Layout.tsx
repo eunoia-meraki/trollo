@@ -2,13 +2,11 @@ import { type FC } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import { Sticky, StickyContainer } from 'react-sticky';
+import { Sticky } from 'react-sticky';
 
 import { RequireAuth } from '../RequireAuth';
 
 import { Header } from './Header';
-
-// import { RequireAuth } from './components/RequireAuth';
 
 export const Layout: FC = () => {
   return (

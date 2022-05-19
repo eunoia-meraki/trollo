@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { ConfirmationModalContext } from '../../components/ConfirmationModalProvider';
 import { AuthContext } from '../../context/AuthProvider';
 import { APIError } from '../../interfaces';
 import { Path } from '../../types';
@@ -54,11 +55,12 @@ export const EditProfile: FC = () => {
       },
       onError: (e) => {
         toast.error(e.message);
+        removeToken();
       },
     }
   );
 
-  const { mutate: mutateEditProfile, isLoading: isLoadingEditProfile } = useMutation<
+  const { mutate: mutateEditProfile, isLoading: isEditProfileLoading } = useMutation<
     unknown,
     APIError,
     IEditProfileForm
@@ -70,7 +72,26 @@ export const EditProfile: FC = () => {
     })
   );
 
-  const isLoading = isLoadingEditProfile || isQueryLoading;
+  const { mutate: mutateRemoveProfile } = useMutation<unknown, APIError>(
+    () => axios.delete(`users/${authInfo?.userId}`),
+    {
+      onSuccess: () => {
+        removeToken();
+      },
+      onError: (e) => {
+        toast.error(e.message);
+        removeToken();
+      },
+    }
+  );
+
+  const { openModal } = useContext(ConfirmationModalContext);
+
+  const removeProfile = (): void => {
+    openModal(t('confirmationModal.deleteProfile'), () => mutateRemoveProfile());
+  };
+
+  const isLoading = isEditProfileLoading || isQueryLoading;
 
   const onSubmit = handleSubmit((formData) => {
     mutateEditProfile(formData, {
@@ -97,6 +118,7 @@ export const EditProfile: FC = () => {
             type="text"
             placeholder={t('auth.login')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            disabled={isQueryLoading}
             {...register('login', {
               validate: (value) => {
                 if (value === '') {
@@ -129,6 +151,7 @@ export const EditProfile: FC = () => {
             type="text"
             placeholder={t('auth.name')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            disabled={isQueryLoading}
             {...register('name', {
               validate: (value) => {
                 if (value === '') {
@@ -162,6 +185,7 @@ export const EditProfile: FC = () => {
               type={passwordIsHidden ? 'password' : 'text'}
               autoComplete="new-password"
               placeholder={t('auth.password')}
+              disabled={isQueryLoading}
               className="w-full pl-4 pr-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               {...register('password', {
                 validate: (value) => {
@@ -212,6 +236,11 @@ export const EditProfile: FC = () => {
           {errors.password && (
             <span className="text-red-500 text-sm">{errors.password.message}</span>
           )}
+        </div>
+        <div className="flex justify-end">
+          <button type="button" className="mt-4 text-blue-900" onClick={removeProfile}>
+            {t('deleteProfile')}
+          </button>
         </div>
 
         {/* TODO: refactor svg */}

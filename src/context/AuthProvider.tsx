@@ -58,7 +58,7 @@ export const AuthProvider: FC<{
     axios.defaults.headers.common = {
       Authorization: `Bearer ${token}`,
     };
-    const decodedUserId = getUserId(localStorageToken);
+    const decodedUserId = getUserId(token);
 
     setAuthInfo({ token, userId: decodedUserId });
     localStorage.setItem('token', token);
