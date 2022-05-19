@@ -1,4 +1,6 @@
 {
+  "addColumn": "Add column",
+  "addTask": "Add task",
   "auth": {
     "editProfile": "Edit Profile",
     "login": "Login",
