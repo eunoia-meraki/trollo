@@ -5,8 +5,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { StickyContainer } from 'react-sticky';
 
-import { StickyContainer } from 'react-sticky';
-
 import axios from 'axios';
 
 import { Path } from './types';
