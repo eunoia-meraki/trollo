@@ -39,7 +39,7 @@ export interface APITaskData {
   description: string;
   userId: string;
   boardId: string;
-  columnId: string;
+  // columnId: string;
 }
 
 export interface APIError {

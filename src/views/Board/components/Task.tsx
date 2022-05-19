@@ -2,44 +2,43 @@ import classNames from 'classnames';
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { APITaskData } from '../../../interfaces';
+import { Draggable, DragTaskData } from '../../../types';
 
-interface DragItem {
-  taskId: string;
-}
 export interface ITask {
   task: APITaskData;
-  swapItems: (dragTaskId: string, hoverTaskId: string) => void;
-  changeOrder: () => void;
+  swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
+  commitOrderChanges: () => void;
 }
 
 export const Task: FC<ITask> = ({
   task: { id, order, title, description },
-  changeOrder,
-  swapItems,
+  swapTasks,
+  commitOrderChanges,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [, drop] = useDrop<DragItem>({
-    accept: 'COLUMN',
+  const [, drop] = useDrop<DragTaskData>({
+    accept: Draggable.Task,
     hover(item) {
-      if (!ref.current) {
-        return;
-      }
-      const dragedColumnId = item.taskId;
-      const hoverColumnId = id;
-
-      if (dragedColumnId === hoverColumnId) {
+      if (item.id === id) {
         return;
       }
 
-      swapItems(dragedColumnId, hoverColumnId);
+      const dragedTaskId = item.id;
+      const hoverTaskId = id;
+
+      if (dragedTaskId === hoverTaskId) {
+        return;
+      }
+
+      swapTasks(dragedTaskId, hoverTaskId);
     },
-    drop: () => changeOrder(),
+    drop: () => commitOrderChanges(),
   });
 
-  const [{ isDragging }, drag] = useDrag<DragItem, unknown, { isDragging: boolean }>({
-    type: 'COLUMN',
+  const [{ isDragging }, drag] = useDrag<DragTaskData, unknown, { isDragging: boolean }>({
+    type: Draggable.Task,
     item: () => {
-      return { taskId: id };
+      return { id };
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),

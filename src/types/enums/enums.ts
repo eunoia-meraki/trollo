@@ -8,3 +8,8 @@ export enum Path {
   EditProfile = '/editprofile',
   Any = '*',
 }
+
+export enum Draggable {
+  Column = 'COLUMN',
+  Task = 'TASK',
+}

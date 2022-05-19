@@ -1,29 +1,30 @@
 import axios from 'axios';
 import { FC, useContext, useRef } from 'react';
-import { Task } from './Task';
 import { useMutation, useQueryClient } from 'react-query';
 import { APIAddTaskPayload, APIColumnData } from '../../../interfaces';
 import { AuthContext } from '../../../context/AuthProvider';
 import { useTranslation } from 'react-i18next';
 import { useDrag, useDrop } from 'react-dnd';
 import classNames from 'classnames';
+import { Task } from './Task';
+import { DragColumnData, Draggable, DragTaskData } from '../../../types';
 
 export interface IColumn {
   boardId: string;
   column: APIColumnData;
-  swapItems: (dragColumnId: string, hoverColumnId: string) => void;
-  changeOrder: () => void;
-}
-
-interface DragItem {
-  columnId: string;
+  swapColumns: (dragColumnId: string, hoverColumnId: string) => void;
+  swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
+  moveTask: (dragTaskId: string, toColumnId: string) => void;
+  commitOrderChanges: () => void;
 }
 
 export const Column: FC<IColumn> = ({
   column: { id, order, tasks, title },
   boardId,
-  swapItems,
-  changeOrder,
+  swapColumns,
+  swapTasks,
+  moveTask,
+  commitOrderChanges,
 }) => {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
@@ -60,35 +61,41 @@ export const Column: FC<IColumn> = ({
     });
   };
 
-  const [, drop] = useDrop<DragItem>({
-    accept: 'COLUMN',
+  const [, dropTask] = useDrop<DragTaskData>({
+    accept: Draggable.Task,
     hover(item) {
-      if (!ref.current) {
-        return;
-      }
-      const dragedColumnId = item.columnId;
+      const dragedTaskId = item.id;
+
+      moveTask(dragedTaskId, id);
+    },
+  });
+
+  const [, drop] = useDrop<DragColumnData>({
+    accept: Draggable.Column,
+    hover(item) {
+      const dragedColumnId = item.id;
       const hoverColumnId = id;
 
       if (dragedColumnId === hoverColumnId) {
         return;
       }
 
-      swapItems(dragedColumnId, hoverColumnId);
+      swapColumns(dragedColumnId, hoverColumnId);
     },
-    drop: () => changeOrder(),
+    drop: () => commitOrderChanges(),
   });
 
-  const [{ isDragging }, drag] = useDrag<DragItem, unknown, { isDragging: boolean }>({
-    type: 'COLUMN',
+  const [{ isDragging }, drag] = useDrag<DragColumnData, unknown, { isDragging: boolean }>({
+    type: Draggable.Column,
     item: () => {
-      return { columnId: id };
+      return { id };
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
 
-  drag(drop(ref));
+  drag(drop(dropTask(ref)));
 
   return (
     <div
@@ -99,9 +106,14 @@ export const Column: FC<IColumn> = ({
       <div className={classNames('flex p-1 gap-1 flex-col', isDragging && 'opacity-0')}>
         <span>title: {title}</span>
         <span>order: {order}</span>
-        {/* {tasks.map((task) => (
-            <Task key={task.id} task={task} />
-          ))} */}
+        {tasks.map((task) => (
+          <Task
+            key={task.id}
+            task={task}
+            swapTasks={swapTasks}
+            commitOrderChanges={commitOrderChanges}
+          />
+        ))}
         <button className="bg-[#aaa] p-1 rounded-sm" onClick={onAddTaskClick}>
           {t('addTask')}
         </button>

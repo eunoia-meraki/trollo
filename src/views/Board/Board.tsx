@@ -47,10 +47,10 @@ export const Board: FC = () => {
         // TODO replace with full page loading spinner
         <h1>Loading...</h1>
       ) : (
-        <div className="">
+        <div>
           <h1>{boardData.title}</h1>
 
-          <div className="flex gap-1">
+          <div className="flex gap-1 items-start">
             <Columns columns={boardData.columns} boardId={params['boardId'] || ''} />
             <button className="bg-[#aaa] p-1 rounded-sm" onClick={onAddColumnClick}>
               {t('addColumn')}
