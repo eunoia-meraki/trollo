@@ -54,7 +54,7 @@ export const Column: FC<IColumn> = ({
 
   const onAddTaskClick = () => {
     addTaskMutation.mutate({
-      title: 'task name',
+      title: `${order}_${tasks.length}`,
       order: tasks.length,
       description: 'task desc',
       userId: authInfo!.userId, // TODO check null
@@ -118,8 +118,8 @@ export const Column: FC<IColumn> = ({
         className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003] rounded-sm'}
       >
         <div className={classNames('flex flex-col px-2', isDragging && 'opacity-0')}>
-          <span>title: {title}</span>
-          <span>column order: {order}</span>
+          <span>{title}</span>
+          <span>order: {order}</span>
         </div>
 
         <div

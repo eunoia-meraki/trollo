@@ -49,9 +49,9 @@ export const Task: FC<ITask> = ({
         style={{ order }}
       >
         <div className={classNames('flex flex-col', (isDragging || isMoving) && 'opacity-0')}>
-          <span>title: {title}</span>
-          <span>description: {description}</span>
-          <span>task order: {order}</span>
+          <span>{title}</span>
+          {/* <span>{description}</span> */}
+          <span>order: {order}</span>
         </div>
       </div>
     </>

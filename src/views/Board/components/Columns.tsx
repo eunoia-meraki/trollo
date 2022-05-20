@@ -169,7 +169,10 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
   );
 
   const onAddColumnClick = () => {
-    addColumnMutation.mutate({ title: 'column name', order: columns.length });
+    addColumnMutation.mutate({
+      title: `${columns.length}`,
+      order: columns.length,
+    });
   };
 
   return (
