@@ -98,11 +98,18 @@ export const Column: FC<IColumn> = ({
   drop(dropTask(ref));
 
   return (
-    <div ref={ref} className={'w-[200px] h-full overflow-hidden bg-[#867d7d11]'} style={{ order }}>
-      <div ref={drag} className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003]'}>
-        <div className={classNames('flex flex-col', isDragging && 'opacity-0')}>
+    <div
+      ref={ref}
+      className={'w-[200px] h-full overflow-hidden bg-[#867d7d11] rounded-sm'}
+      style={{ order }}
+    >
+      <div
+        ref={drag}
+        className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003] rounded-sm'}
+      >
+        <div className={classNames('flex flex-col px-2', isDragging && 'opacity-0')}>
           <span>title: {title}</span>
-          <span>order: {order}</span>
+          <span>column order: {order}</span>
         </div>
 
         <div

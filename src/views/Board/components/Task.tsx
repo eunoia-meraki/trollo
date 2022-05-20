@@ -45,13 +45,13 @@ export const Task: FC<ITask> = ({
     <>
       <div
         ref={ref}
-        className={classNames(isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}
+        className={classNames('p-2 rounded-sm', isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}
         style={{ order }}
       >
         <div className={classNames('flex flex-col', (isDragging || isMoving) && 'opacity-0')}>
           <span>title: {title}</span>
           <span>description: {description}</span>
-          <span>order: {order}</span>
+          <span>task order: {order}</span>
         </div>
       </div>
     </>

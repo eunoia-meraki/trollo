@@ -22,8 +22,10 @@ export const Board: FC = () => {
           <Spinner style={{ width: '5rem', height: '5rem' }} />
         </div>
       ) : (
-        <div className="flex flex-col grow h-full overflow-hidden">
-          <span>{boardData.title}</span>
+        <div className="flex flex-col grow gap-2 h-full overflow-hidden">
+          <div className="bg-[#615f5f49] p-2 rounded-sm">
+            <span>{boardData.title}</span>
+          </div>
           <Columns columns={boardData.columns} boardId={params['boardId'] || ''} />
         </div>
       )}
