@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+*::-webkit-scrollbar-track
+{
+  @apply bg-transparent
+}
+
+*::-webkit-scrollbar
+{
+  @apply w-[5px] h-[5px] bg-transparent
+}
+
+*::-webkit-scrollbar-thumb
+{
+  @apply bg-gray-500 rounded-3xl min-h-[3rem]
+}
+
+/* https://css-tricks.com/custom-scrollbars-in-webkit/ */
+*::-webkit-scrollbar-corner
+{
+  @apply bg-transparent
+}
+
+/* TODO how to replace it? */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #9190b4 transparent;
+}

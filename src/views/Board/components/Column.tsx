@@ -95,28 +95,34 @@ export const Column: FC<IColumn> = ({
     }),
   });
 
-  drag(drop(dropTask(ref)));
+  drop(dropTask(ref));
 
   return (
-    <div
-      ref={ref}
-      className={classNames(isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}
-      style={{ order }}
-    >
-      <div className={classNames('flex p-1 gap-1 flex-col', isDragging && 'opacity-0')}>
-        <span>title: {title}</span>
-        <span>order: {order}</span>
-        {tasks.map((task) => (
-          <Task
-            key={task.id}
-            task={task}
-            swapTasks={swapTasks}
-            commitOrderChanges={commitOrderChanges}
-          />
-        ))}
-        <button className="bg-[#aaa] p-1 rounded-sm" onClick={onAddTaskClick}>
-          {t('addTask')}
-        </button>
+    <div ref={ref} className={'w-[200px] h-full overflow-hidden bg-[#867d7d11]'} style={{ order }}>
+      <div ref={drag} className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003]'}>
+        <div className={classNames('flex flex-col', isDragging && 'opacity-0')}>
+          <span>title: {title}</span>
+          <span>order: {order}</span>
+        </div>
+
+        <div
+          className={classNames('flex flex-col gap-2 overflow-y-auto', isDragging && 'opacity-0')}
+        >
+          {tasks.map((task) => (
+            <Task
+              key={task.id}
+              task={task}
+              swapTasks={swapTasks}
+              commitOrderChanges={commitOrderChanges}
+            />
+          ))}
+        </div>
+
+        <div className={classNames('w-full', isDragging && 'opacity-0')}>
+          <button className="w-full p-2 bg-[#aaa] rounded-sm" onClick={onAddTaskClick}>
+            {t('addTask')}
+          </button>
+        </div>
       </div>
     </div>
   );

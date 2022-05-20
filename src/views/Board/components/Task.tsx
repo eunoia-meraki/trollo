@@ -8,27 +8,21 @@ export interface ITask {
   task: APITaskData;
   swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
   commitOrderChanges: () => void;
+  isMoving?: boolean;
 }
 
 export const Task: FC<ITask> = ({
   task: { id, order, title, description },
   swapTasks,
   commitOrderChanges,
+  isMoving = false,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<DragTaskData>({
     accept: Draggable.Task,
     hover(item) {
-      if (item.id === id) {
-        return;
-      }
-
       const dragedTaskId = item.id;
       const hoverTaskId = id;
-
-      if (dragedTaskId === hoverTaskId) {
-        return;
-      }
 
       swapTasks(dragedTaskId, hoverTaskId);
     },
@@ -49,8 +43,12 @@ export const Task: FC<ITask> = ({
 
   return (
     <>
-      <div ref={ref} className={classNames(isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}>
-        <div className={classNames('flex flex-col', isDragging && 'opacity-0')}>
+      <div
+        ref={ref}
+        className={classNames(isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}
+        style={{ order }}
+      >
+        <div className={classNames('flex flex-col', (isDragging || isMoving) && 'opacity-0')}>
           <span>title: {title}</span>
           <span>description: {description}</span>
           <span>order: {order}</span>

@@ -19,7 +19,7 @@ export const Layout: FC = () => {
             </div>
           )}
         </Sticky>
-        <div className="container grow mx-auto my-2 p-2 h-full bg-white border">
+        <div className="container flex flex-col mx-auto my-2 p-2 h-full bg-white border overflow-hidden">
           <Outlet />
         </div>
       </>
