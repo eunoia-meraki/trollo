@@ -23,30 +23,57 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
   }, [columns]);
 
   const swapColumns = (dragColumnId: string, hoverColumnId: string) => {
-    setColumnsLocal((prev) => {
-      const draggedOrder = prev.find((column) => column.id === dragColumnId)?.order;
-      const hoverOrder = prev.find((column) => column.id === hoverColumnId)?.order;
+    let dragColumnOrder: number | null = null;
+    let hoverColumnOrder: number | null = null;
 
-      if (draggedOrder === undefined || hoverOrder === undefined) {
-        return prev;
+    columnsLocal.find((column) => {
+      if (column.id === dragColumnId) {
+        dragColumnOrder = column.order;
       }
 
-      console.log('swap');
+      if (column.id === hoverColumnId) {
+        hoverColumnOrder = column.order;
+      }
 
-      return prev.map((column) => {
-        const newColumn = { ...column };
-
-        if (newColumn.id === dragColumnId) {
-          newColumn.order = hoverOrder;
-        }
-
-        if (newColumn.id === hoverColumnId) {
-          newColumn.order = draggedOrder;
-        }
-
-        return newColumn;
-      });
+      return dragColumnOrder !== null && hoverColumnOrder !== null;
     });
+
+    if (dragColumnOrder === null || hoverColumnOrder === null) {
+      return;
+    }
+
+    console.log('swap');
+
+    setColumnsLocal((prev) =>
+      prev.map((column) => {
+        // allways false... escape warnings...
+        if (dragColumnOrder === null || hoverColumnOrder === null) {
+          return column;
+        }
+
+        if (column.id === dragColumnId) {
+          return { ...column, order: hoverColumnOrder };
+        }
+
+        const dir = dragColumnOrder - hoverColumnOrder;
+
+        return dir > 0
+          ? {
+              ...column,
+              order:
+                column.order >= hoverColumnOrder && column.order < dragColumnOrder
+                  ? column.order + 1
+                  : column.order,
+            }
+          : {
+              ...column,
+              order:
+                column.order <= hoverColumnOrder && column.order > dragColumnOrder
+                  ? column.order - 1
+                  : column.order,
+            };
+      })
+    );
   };
 
   const swapTasks = (dragTaskId: string, hoverTaskId: string) => {
@@ -54,13 +81,13 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       return;
     }
 
-    let dragTaskColumnId = '-';
-    let dragTaskOrder = 0;
-    let hoverTaskColumnId = '-';
-    let hoverTaskOrder = 0;
+    let dragTaskColumnId: string | null = null;
+    let dragTaskOrder: number | null = null;
+    let hoverTaskColumnId: string | null = null;
+    let hoverTaskOrder: number | null = null;
 
-    columnsLocal.forEach((column) =>
-      column.tasks.forEach((task) => {
+    columnsLocal.find((column) =>
+      column.tasks.find((task) => {
         if (task.id === dragTaskId) {
           dragTaskColumnId = column.id;
           dragTaskOrder = task.order;
@@ -68,34 +95,70 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
           hoverTaskColumnId = column.id;
           hoverTaskOrder = task.order;
         }
+
+        return (
+          dragTaskColumnId !== null &&
+          dragTaskOrder !== null &&
+          hoverTaskColumnId !== null &&
+          hoverTaskOrder !== null
+        );
       })
     );
 
-    // avoid the different column id swap
-    if (dragTaskColumnId !== hoverTaskColumnId) {
+    if (
+      // avoid swap between different columns
+      dragTaskColumnId !== hoverTaskColumnId ||
+      dragTaskColumnId === null ||
+      dragTaskOrder === null ||
+      hoverTaskColumnId === null ||
+      hoverTaskOrder === null
+    ) {
       return;
     }
 
     console.log('swapTasks');
 
     setColumnsLocal((prev) => {
-      return prev.map((column) => {
-        if (column.id !== dragTaskColumnId) {
-          return column;
-        }
+      return prev.map((column) =>
+        column.id !== dragTaskColumnId
+          ? { ...column }
+          : {
+              ...column,
+              tasks: column.tasks.map((task) => {
+                // allways false... escape warnings...
+                if (
+                  dragTaskColumnId === null ||
+                  dragTaskOrder === null ||
+                  hoverTaskColumnId === null ||
+                  hoverTaskOrder === null
+                ) {
+                  return task;
+                }
 
-        return {
-          ...column,
-          tasks: column.tasks.map((task) => {
-            if (task.id === dragTaskId) {
-              return { ...task, order: hoverTaskOrder };
-            } else if (task.id === hoverTaskId) {
-              return { ...task, order: dragTaskOrder };
+                if (task.id === dragTaskId) {
+                  return { ...task, order: hoverTaskOrder };
+                }
+
+                const dir = dragTaskOrder - hoverTaskOrder;
+
+                return dir > 0
+                  ? {
+                      ...task,
+                      order:
+                        task.order >= hoverTaskOrder && task.order < dragTaskOrder
+                          ? task.order + 1
+                          : task.order,
+                    }
+                  : {
+                      ...task,
+                      order:
+                        task.order <= hoverTaskOrder && task.order > dragTaskOrder
+                          ? task.order - 1
+                          : task.order,
+                    };
+              }),
             }
-            return task;
-          }),
-        };
-      });
+      );
     });
   };
 
@@ -108,9 +171,9 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
         if (task.id === dragTaskId) {
           dragTask = task;
           dragTaskColumnId = column.id;
-          return true;
         }
-        return false;
+
+        return task.id === dragTaskId;
       })
     );
 
@@ -127,13 +190,17 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
           return {
             ...column,
             tasks: column.tasks.reduce<APITaskData[]>((acc, task) => {
-              if (task.id !== dragTaskId && task.order > dragTask.order) {
-                acc.push({ ...task, order: task.order - 1 });
-              } else if (task.id !== dragTaskId) {
-                acc.push(task);
-              }
-
-              return acc;
+              return [
+                ...acc,
+                ...(task.id !== dragTaskId
+                  ? [
+                      {
+                        ...task,
+                        order: task.order > dragTask.order ? task.order - 1 : task.order,
+                      },
+                    ]
+                  : []),
+              ];
             }, []),
           };
         } else if (column.id === toColumnId) {
@@ -142,6 +209,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
             tasks: [...column.tasks, { ...dragTask, order: column.tasks.length }],
           };
         }
+
         return column;
       });
     });

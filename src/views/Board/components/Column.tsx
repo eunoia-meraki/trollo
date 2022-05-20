@@ -61,11 +61,7 @@ export const Column: FC<IColumn> = ({
     });
   };
 
-  const [{ isOver, taskId }, dropTask] = useDrop<
-    DragTaskData,
-    unknown,
-    { isOver: boolean; taskId: string }
-  >({
+  const [{ taskId }, dropTask] = useDrop<DragTaskData, unknown, { taskId: string }>({
     accept: Draggable.Task,
     hover: (item) => {
       const dragedTaskId = item.id;
@@ -74,7 +70,6 @@ export const Column: FC<IColumn> = ({
     },
     collect: (monitor) => {
       return {
-        isOver: !!monitor.isOver(),
         taskId: monitor.getItem()?.id,
       };
     },
@@ -129,7 +124,7 @@ export const Column: FC<IColumn> = ({
             <Task
               key={task.id}
               task={task}
-              isMoving={isOver && taskId === task.id}
+              isMoving={taskId === task.id}
               swapTasks={swapTasks}
               commitOrderChanges={commitOrderChanges}
             />
