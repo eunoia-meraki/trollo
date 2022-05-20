@@ -126,12 +126,15 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
         if (column.id === dragTaskColumnId) {
           return {
             ...column,
-            tasks: column.tasks.filter((task) => {
+            tasks: column.tasks.reduce<APITaskData[]>((acc, task) => {
               if (task.id !== dragTaskId && task.order > dragTask.order) {
-                task.order -= 1;
+                acc.push({ ...task, order: task.order - 1 });
+              } else if (task.id !== dragTaskId) {
+                acc.push(task);
               }
-              return task.id !== dragTaskId;
-            }),
+
+              return acc;
+            }, []),
           };
         } else if (column.id === toColumnId) {
           return {
