@@ -4,40 +4,41 @@ import { useTranslation } from 'react-i18next';
 
 import { Path } from '../../types';
 
+import { LangSelect } from '../LangSelect';
+
 export const Footer: FC = () => {
   const { t } = useTranslation();
 
   return (
     <footer className="p-4 mt-auto border bg-white sm:p-6 dark:bg-gray-800">
-      <div className="md:flex md:justify-between">
-        <div className="mb-6 md:mb-0">
-          <a href={Path.Welcome} className="flex items-center">
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Trollo
-            </span>
-          </a>
-        </div>
+      <div className="md:flex md:justify-between md:items-start">
+        <LangSelect />
+
         <div className="grid grid-cols-2 gap-8 sm:gap-6">
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
               {t('footer.authors')}
             </h2>
+
             <ul className="text-gray-600 dark:text-gray-400">
               <li className="mb-4">
                 <a href="https://github.com/alexey-koren" className="hover:underline">
                   Alexey Koren
                 </a>
               </li>
+
               <li className="mb-4">
                 <a href="https://github.com/livwvil" className="hover:underline">
                   Roman Fomin
                 </a>
               </li>
+
               <li className="mb-4">
                 <a href="https://github.com/0deyal0" className="hover:underline">
                   Dmitry Chukhlyaev
                 </a>
               </li>
+
               <li>
                 <a href="https://github.com/ivan-kuricyn" className="hover:underline">
                   Ivan Kuricyn
@@ -45,21 +46,25 @@ export const Footer: FC = () => {
               </li>
             </ul>
           </div>
+
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
               {t('footer.school')}
             </h2>
+
             <ul className="text-gray-600 dark:text-gray-400">
               <li className="mb-4">
                 <a href="https://rs.school" className="hover:underline">
                   Website
                 </a>
               </li>
+
               <li className="mb-4">
                 <a href="https://www.youtube.com/c/rollingscopesschool" className="hover:underline">
                   YouTube
                 </a>
               </li>
+
               <li className="mb-4">
                 <a
                   href="https://github.com/rolling-scopes/rsschool-app"

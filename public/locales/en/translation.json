@@ -2,11 +2,12 @@
   "addColumn": "Add column",
   "addTask": "Add task",
   "auth": {
-    "editProfile": "Edit Profile",
+    "editProfile": "Edit profile",
     "login": "Login",
     "logout": "Log out",
     "name": "Name",
     "password": "Password",
+    "profile": "Profile",
     "signIn": "Sign In",
     "signUp": "Sign Up"
   },
@@ -27,8 +28,8 @@
     "authors": "Authors",
     "school": "School"
   },
-  "goToMainPage": "Go to main page",
   "inputBoardTitle": "Input board title",
+  "mainPage": "Main page",
   "toasterMessages": {
     "editProfileSuccess": "Success! Profile edited. SignIn again please.",
     "signInSuccess": "Success! Now sign in",

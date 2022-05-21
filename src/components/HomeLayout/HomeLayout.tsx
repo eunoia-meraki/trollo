@@ -1,0 +1,36 @@
+import { type FC } from 'react';
+
+import { Outlet } from 'react-router-dom';
+
+import classNames from 'classnames';
+
+import { useScrollPosition } from '../../hooks/useScrollPosition';
+
+import { RequireAuth } from '../RequireAuth';
+import { Logo } from '../Logo';
+import { UserButton } from '../UserButton';
+
+export const HomeLayout: FC = () => {
+  const scrollPosition = useScrollPosition();
+
+  return (
+    <RequireAuth>
+      <>
+        <header
+          className={classNames(
+            scrollPosition > 20 && 'bg-white shadow',
+            'sticky top-0 pl-6 pr-3 py-3 flex items-center justify-between transition-all duration-300'
+          )}
+        >
+          <Logo />
+
+          <div className="flex gap-2">
+            <UserButton />
+          </div>
+        </header>
+
+        <Outlet />
+      </>
+    </RequireAuth>
+  );
+};

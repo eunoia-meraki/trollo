@@ -2,11 +2,12 @@
   "addColumn": "Добавить колонку",
   "addTask": "Добавить задачу",
   "auth": {
-    "editProfile": "Редактирования профиля",
+    "editProfile": "Редактировать профиль",
     "login": "Логин",
     "logout": "Выйти",
     "name": "Имя",
     "password": "Пароль",
+    "profile": "Профиль",
     "signIn": "Вход",
     "signUp": "Регистрация"
   },
@@ -27,8 +28,8 @@
     "authors": "Авторы",
     "school": "Школа"
   },
-  "goToMainPage": "Перейти на главную страницу",
   "inputBoardTitle": "Введите название доски",
+  "mainPage": "Главная страница",
   "toasterMessages": {
     "editProfileSuccess": "Успешно! Профиль изменен. Зайди пожалуйста заново.",
     "signInSuccess": "Успешно! Теперь войдите",

@@ -65,8 +65,8 @@ export const SignIn: FC = () => {
   });
 
   return (
-    <main>
-      <form onSubmit={onSubmit} className="max-w-md p-6 mt-[10vh] mx-auto">
+    <main className="mt-10">
+      <form onSubmit={onSubmit} className="max-w-md p-6 mx-auto">
         <h3 className="text-xl font-bold text-center">{t('auth.signIn')}</h3>
 
         <div>

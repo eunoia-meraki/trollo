@@ -107,9 +107,9 @@ export const EditProfile: FC = () => {
   });
 
   return (
-    <main>
-      <form onSubmit={onSubmit} className="max-w-md p-6 mt-[10vh] mx-auto">
-        <h3 className="text-xl font-bold text-center">{t('auth.editProfile')}</h3>
+    <main className="mt-10">
+      <form onSubmit={onSubmit} className="max-w-md p-6 mx-auto">
+        <h3 className="text-xl font-bold text-center">{t('auth.profile')}</h3>
 
         <div className="mt-4">
           <label className="block">{t('auth.login')}</label>
