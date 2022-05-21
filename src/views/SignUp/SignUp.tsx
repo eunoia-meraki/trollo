@@ -63,7 +63,7 @@ export const SignUp: FC = () => {
       onSuccess: () => {
         toast.success(t('toasterMessages.signInSuccess'));
 
-        navigate(Path.SignIn);
+        navigate(`/${Path.SignIn}`);
       },
       onError: () => {
         toast.error(t('toasterMessages.suchLoginAlreadyExists'));

@@ -8,6 +8,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import { Task } from './Task';
 import { DragColumnData, Draggable, DragTaskData } from '../../../types';
+import { AddItemModalContext } from '../../../components/AddItemModalProvider';
 
 export interface IColumn {
   boardId: string;
@@ -52,14 +53,7 @@ export const Column: FC<IColumn> = ({
     }
   );
 
-  const onAddTaskClick = () => {
-    addTaskMutation.mutate({
-      title: `${order}_${tasks.length}`,
-      order: tasks.length,
-      description: 'task desc',
-      userId: authInfo!.userId, // TODO check null
-    });
-  };
+  const onAddTaskClick = () => {};
 
   const [{ taskId }, dropTask] = useDrop<DragTaskData, unknown, { taskId: string }>({
     accept: Draggable.Task,
@@ -102,6 +96,18 @@ export const Column: FC<IColumn> = ({
 
   drop(dropTask(ref));
 
+  const { openModal } = useContext(AddItemModalContext);
+
+  const addTask = (title: string): void =>
+    addTaskMutation.mutate({
+      title: title,
+      order: tasks.length,
+      description: 'task desc',
+      userId: authInfo!.userId, // TODO check null
+    });
+
+  const onAddTaskButtonClick = () => openModal(t('addTask'), addTask);
+
   return (
     <div
       ref={ref}
@@ -132,7 +138,7 @@ export const Column: FC<IColumn> = ({
         </div>
 
         <div className={classNames('w-full', isDragging && 'opacity-0')}>
-          <button className="w-full p-2 bg-[#aaa] rounded-sm" onClick={onAddTaskClick}>
+          <button className="w-full p-2 bg-[#aaa] rounded-sm" onClick={onAddTaskButtonClick}>
             {t('addTask')}
           </button>
         </div>

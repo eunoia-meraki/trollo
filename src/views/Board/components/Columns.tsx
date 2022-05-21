@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
+import { AddItemModalContext } from '../../../components/AddItemModalProvider';
 import { APIAddColumnPayload, APIColumnData, APITaskData } from '../../../interfaces';
 import { Column } from './Column';
 
@@ -236,11 +237,17 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
     }
   );
 
-  const onAddColumnClick = () => {
+  const { openModal } = useContext(AddItemModalContext);
+
+  const addColumn = (title: string): void => {
     addColumnMutation.mutate({
-      title: `${columns.length}`,
+      title: title,
       order: columns.length,
     });
+  };
+
+  const onAddColumnButtonClick = () => {
+    openModal(t('addColumn'), addColumn);
   };
 
   return (
@@ -261,7 +268,10 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
         </div>
       )}
 
-      <button className="shrink-0 self-start p-2 bg-[#aaa] rounded-sm" onClick={onAddColumnClick}>
+      <button
+        className="shrink-0 self-start p-2 bg-[#aaa] rounded-sm"
+        onClick={onAddColumnButtonClick}
+      >
         {t('addColumn')}
       </button>
     </div>

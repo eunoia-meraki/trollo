@@ -10,7 +10,7 @@ interface IConfirmationModalProvider {
   children: ReactElement;
 }
 
-interface IConfirmCallback {
+interface IConfirmHandler {
   handleConfirm: () => void;
 }
 
@@ -19,12 +19,12 @@ export const ConfirmationModalProvider: FC<IConfirmationModalProvider> = ({ chil
 
   const [isOpen, setIsOpen] = useState(false);
   const [action, setAction] = useState('');
-  const [confirmCallback, setConfirmCallback] = useState<IConfirmCallback>({
-    handleConfirm: () => undefined,
+  const [confirmHandler, setConfirmHandler] = useState<IConfirmHandler>({
+    handleConfirm: () => {},
   });
 
   const openModal = (action: string, handleConfirm: () => void): void => {
-    setConfirmCallback({ handleConfirm });
+    setConfirmHandler({ handleConfirm });
     setAction(action);
     setIsOpen(true);
   };
@@ -32,7 +32,7 @@ export const ConfirmationModalProvider: FC<IConfirmationModalProvider> = ({ chil
   const closeModal = (): void => setIsOpen(false);
 
   const confirm = (): void => {
-    const { handleConfirm } = confirmCallback;
+    const { handleConfirm } = confirmHandler;
     handleConfirm();
     setIsOpen(false);
   };
@@ -119,7 +119,7 @@ interface IConfirmationModalContext {
 }
 
 const defaultContext: IConfirmationModalContext = {
-  openModal: () => undefined,
+  openModal: () => {},
 };
 
 export const ConfirmationModalContext = createContext<IConfirmationModalContext>(defaultContext);

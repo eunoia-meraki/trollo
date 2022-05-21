@@ -15,7 +15,7 @@
   "confirmationModal": {
     "areYouSureYouWantTo": "Вы уверены, что хотите",
     "deleteBoard": "удалить доску",
-    "deleteProfile": "Удалить профиль",
+    "deleteProfile": "удалить профиль",
     "no": "Нет",
     "yes": "Да"
   },
@@ -30,6 +30,7 @@
   },
   "inputBoardTitle": "Введите название доски",
   "mainPage": "Главная страница",
+  "title": "Заголовок",
   "toasterMessages": {
     "editProfileSuccess": "Успешно! Профиль изменен. Зайди пожалуйста заново.",
     "signInSuccess": "Успешно! Теперь войдите",

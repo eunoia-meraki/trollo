@@ -30,6 +30,7 @@
   },
   "inputBoardTitle": "Input board title",
   "mainPage": "Main page",
+  "title": "Title",
   "toasterMessages": {
     "editProfileSuccess": "Success! Profile edited. SignIn again please.",
     "signInSuccess": "Success! Now sign in",
