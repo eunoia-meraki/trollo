@@ -3,9 +3,11 @@ import type { FC, ChangeEvent } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 
 export const LangSelect: FC = () => {
-  const { languages, setLanguage } = useLanguage();
+  const { languages, setLanguage, currentLanguage } = useLanguage();
 
-  const onChange = (e: ChangeEvent<HTMLSelectElement>): void => setLanguage(e.target.value);
+  const onChange = (e: ChangeEvent<HTMLSelectElement>): void => {
+    setLanguage(e.target.value);
+  };
 
   return (
     <select
@@ -18,7 +20,7 @@ export const LangSelect: FC = () => {
           focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
     >
       {languages().map(({ key, text }) => (
-        <option key={key} value={key}>
+        <option selected={key === currentLanguage()} key={key} value={key}>
           {text}
         </option>
       ))}

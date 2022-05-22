@@ -26,7 +26,11 @@
   },
   "footer": {
     "authors": "Авторы",
-    "school": "Школа"
+    "school": "Школа",
+    "koren": "Алексей Корен",
+    "fomin": "Роман Фомин",
+    "chukhlyaev": "Дмитрий Чухляев",
+    "kuricyn": "Иван Курицын"
   },
   "inputBoardTitle": "Введите название доски",
   "mainPage": "Главная страница",
@@ -49,5 +53,6 @@
     "fieldСanNotBeLongerThan20Characters": "Поле не может быть длиннее 20 символов",
     "fieldСanNotBeShorterThan4Characters": "Поле не может быть короче 4 символов",
     "fieldСanNotBeShorterThan6Characters": "Поле не может быть короче 6 символов"
-  }
+  },
+  "webSite": "Веб-сайт"
 }

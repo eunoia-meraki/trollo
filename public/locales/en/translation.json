@@ -26,7 +26,11 @@
   },
   "footer": {
     "authors": "Authors",
-    "school": "School"
+    "school": "School",
+    "koren": "Alexey Koren",
+    "fomin": "Roman Fomin",
+    "chukhlyaev": "Dmitry Chukhlyaev",
+    "kuricyn": "Ivan Kuricyn"
   },
   "inputBoardTitle": "Input board title",
   "mainPage": "Main page",
@@ -49,5 +53,6 @@
     "fieldСanNotBeLongerThan20Characters": "Field can not be longer than 20 characters",
     "fieldСanNotBeShorterThan4Characters": "Field can not be shorter than 4 characters",
     "fieldСanNotBeShorterThan6Characters": "Field can not be shorter than 6 characters"
-  }
+  },
+  "webSite": "Website"
 }

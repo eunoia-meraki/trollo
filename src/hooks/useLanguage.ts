@@ -8,6 +8,7 @@ interface ILanguage {
 interface IUseLanguage {
   languages: () => ILanguage[];
   setLanguage: (language: string) => void;
+  currentLanguage: () => string;
 }
 
 export const useLanguage = (): IUseLanguage => {
@@ -23,5 +24,9 @@ export const useLanguage = (): IUseLanguage => {
     return langs;
   };
 
-  return { languages, setLanguage };
+  const currentLanguage = () => {
+    return i18n.language;
+  };
+
+  return { languages, setLanguage, currentLanguage };
 };

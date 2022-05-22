@@ -23,25 +23,25 @@ export const Footer: FC = () => {
             <ul className="text-gray-600 dark:text-gray-400">
               <li className="mb-4">
                 <a href="https://github.com/alexey-koren" className="hover:underline">
-                  Alexey Koren
+                  {t('footer.koren')}
                 </a>
               </li>
 
               <li className="mb-4">
                 <a href="https://github.com/livwvil" className="hover:underline">
-                  Roman Fomin
+                  {t('footer.fomin')}
                 </a>
               </li>
 
               <li className="mb-4">
                 <a href="https://github.com/0deyal0" className="hover:underline">
-                  Dmitry Chukhlyaev
+                  {t('footer.chukhlyaev')}
                 </a>
               </li>
 
               <li>
                 <a href="https://github.com/ivan-kuricyn" className="hover:underline">
-                  Ivan Kuricyn
+                  {t('footer.kuricyn')}
                 </a>
               </li>
             </ul>
@@ -55,7 +55,7 @@ export const Footer: FC = () => {
             <ul className="text-gray-600 dark:text-gray-400">
               <li className="mb-4">
                 <a href="https://rs.school" className="hover:underline">
-                  Website
+                  {t('webSite')}
                 </a>
               </li>
 
