@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { Task } from './Task';
 import { DragColumnData, Draggable, DragTaskData } from '../../../types';
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
+import { ColumnTitle } from './ColumnTitle';
 
 export interface IColumn {
   boardId: string;
@@ -118,10 +119,13 @@ export const Column: FC<IColumn> = ({
         ref={drag}
         className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003] rounded-sm'}
       >
-        <div className={classNames('flex flex-col px-2', isDragging && 'opacity-0')}>
-          <span>{title}</span>
-          <span>order: {order}</span>
-        </div>
+        <ColumnTitle
+          isDragging={isDragging}
+          title={title}
+          order={order}
+          id={id}
+          boardId={boardId}
+        />
 
         <div
           className={classNames('flex flex-col gap-2 overflow-y-auto', isDragging && 'opacity-0')}
