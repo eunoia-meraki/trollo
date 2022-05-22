@@ -1,5 +1,5 @@
 import type { FC, FocusEvent, DragEvent } from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import { useMutation } from 'react-query';
 
@@ -7,48 +7,67 @@ import axios, { AxiosResponse } from 'axios';
 
 import classNames from 'classnames';
 
-import { APIColumnData } from '../../../interfaces';
+import { APITaskData } from '../../../interfaces';
 
-interface APIEditColumnPayload {
+import { AuthContext } from '../../../context/AuthProvider';
+
+interface APIEditTaskPayload {
   title: string;
+  description: string;
   order: number;
+  boardId: string;
+  userId: string;
 }
 
-interface APIEditColumnResponse {
+interface APIEditTaskResponse {
   title: string;
+  description: string;
   order: number;
   id: string;
+  boardId: string;
+  userId: string;
 }
 
-interface IColumnTitle {
+interface ITaskTitle {
   isDragging: boolean;
-  column: APIColumnData;
+  isMoving: boolean;
+  task: APITaskData;
+  columnId: string;
   boardId: string;
 }
 
-export const ColumnTitle: FC<IColumnTitle> = ({
+export const TaskTitle: FC<ITaskTitle> = ({
   isDragging,
-  column: { id, title, order },
+  isMoving,
+  task: { id, title, order },
+  columnId,
   boardId,
 }) => {
+  const { authInfo } = useContext(AuthContext);
+
   const [isEditing, setIsEditing] = useState(false);
   const [titleState, setTitleState] = useState(title);
   const [prevTitleState, setPrevTitleState] = useState(title);
 
-  const editColumnMutation = useMutation<
-    AxiosResponse<APIEditColumnResponse>,
+  const editTaskMutation = useMutation<
+    AxiosResponse<APIEditTaskResponse>,
     unknown,
-    APIEditColumnPayload
+    APIEditTaskPayload
   >(
-    ({ title, order }) =>
-      axios.put(`boards/${boardId}/columns/${id}`, {
+    ({ title, description, order, boardId, userId }) =>
+      axios.put(`boards/${boardId}/columns/${columnId}/tasks/${id}`, {
         title,
+        description,
         order,
+        boardId,
+        userId,
       }),
+
     {
       onSuccess: ({ data: { title } }) => {
         setPrevTitleState(title);
       },
+      // TODO: toaster
       onError: (error) => {
         setTitleState(prevTitleState);
         console.log(error);
@@ -56,7 +75,11 @@ export const ColumnTitle: FC<IColumnTitle> = ({
     }
   );
 
-  const handleClick = (): void => setIsEditing(true);
+  const handleClick = (): void => {
+    if (!isEditing) {
+      setIsEditing(true);
+    }
+  };
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>): void => {
     const inputValue = e.target.value;
@@ -64,9 +87,12 @@ export const ColumnTitle: FC<IColumnTitle> = ({
     if (inputValue) {
       setTitleState(inputValue);
 
-      editColumnMutation.mutate({
+      editTaskMutation.mutate({
         title: inputValue,
+        description: 'task_desc', //TODO fix desc
         order: order,
+        boardId: boardId,
+        userId: authInfo!.userId, // TODO check null
       });
     }
 
@@ -78,7 +104,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({
   const handleRef = (ref: HTMLInputElement | null): void => ref?.focus();
 
   return (
-    <div className={classNames('flex flex-col px-2', isDragging && 'opacity-0')}>
+    <div className={classNames('flex flex-col', (isDragging || isMoving) && 'opacity-0')}>
       {isEditing ? (
         <input
           type="text"
@@ -89,10 +115,11 @@ export const ColumnTitle: FC<IColumnTitle> = ({
           defaultValue={titleState}
         />
       ) : (
-        <span className="cursor-pointer hover:bg-[#aaa]" onClick={handleClick}>
+        <span className="cursor-pointer hover:bg-[#888]" onClick={handleClick}>
           {titleState}
         </span>
       )}
+      {/* <span>{description}</span> */}
       <span>order: {order}</span>
     </div>
   );

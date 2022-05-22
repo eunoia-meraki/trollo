@@ -21,13 +21,15 @@ export interface IColumn {
 }
 
 export const Column: FC<IColumn> = ({
-  column: { id, order, tasks, title },
+  column,
   boardId,
   swapColumns,
   swapTasks,
   moveTask,
   commitOrderChanges,
 }) => {
+  const { id, order, tasks } = column;
+
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -119,13 +121,7 @@ export const Column: FC<IColumn> = ({
         ref={drag}
         className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003] rounded-sm'}
       >
-        <ColumnTitle
-          isDragging={isDragging}
-          title={title}
-          order={order}
-          id={id}
-          boardId={boardId}
-        />
+        <ColumnTitle isDragging={isDragging} column={column} boardId={boardId} />
 
         <div
           className={classNames('flex flex-col gap-2 overflow-y-auto', isDragging && 'opacity-0')}
@@ -134,6 +130,8 @@ export const Column: FC<IColumn> = ({
             <Task
               key={task.id}
               task={task}
+              columnId={id}
+              boardId={boardId}
               isMoving={taskId === task.id}
               swapTasks={swapTasks}
               commitOrderChanges={commitOrderChanges}

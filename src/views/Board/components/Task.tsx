@@ -3,20 +3,27 @@ import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { APITaskData } from '../../../interfaces';
 import { Draggable, DragTaskData } from '../../../types';
+import { TaskTitle } from './TaskTitle';
 
 export interface ITask {
   task: APITaskData;
+  columnId: string;
+  boardId: string;
   swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
   commitOrderChanges: () => void;
   isMoving?: boolean;
 }
 
 export const Task: FC<ITask> = ({
-  task: { id, order, title, description },
+  task,
+  columnId,
+  boardId,
   swapTasks,
   commitOrderChanges,
   isMoving = false,
 }) => {
+  const { id, order } = task;
+
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<DragTaskData>({
     accept: Draggable.Task,
@@ -48,11 +55,13 @@ export const Task: FC<ITask> = ({
         className={classNames('p-2 rounded-sm', isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}
         style={{ order }}
       >
-        <div className={classNames('flex flex-col', (isDragging || isMoving) && 'opacity-0')}>
-          <span>{title}</span>
-          {/* <span>{description}</span> */}
-          <span>order: {order}</span>
-        </div>
+        <TaskTitle
+          isDragging={isDragging}
+          isMoving={isMoving}
+          task={task}
+          columnId={columnId}
+          boardId={boardId}
+        />
       </div>
     </>
   );
