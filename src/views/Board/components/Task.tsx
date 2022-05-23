@@ -49,7 +49,7 @@ export const Task: FC<ITask> = ({
 
   return (
     <>
-      <div ref={ref} className="p-2 rounded border bg-white" style={{ order }}>
+      <div ref={ref} className="p-1 rounded border bg-white" style={{ order }}>
         <TaskTitle
           isDragging={isDragging}
           isMoving={isMoving}

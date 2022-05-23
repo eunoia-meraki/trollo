@@ -111,8 +111,8 @@ export const ColumnTitle: FC<IColumnTitle> = ({
   };
 
   return (
-    <div className={classNames('flex flex-col px-2 font-light', isDragging && 'opacity-0')}>
-      <div className="flex gap-1">
+    <div className={classNames('flex flex-col font-light', isDragging && 'opacity-0')}>
+      <div className="flex gap-1 p-1 rounded hover:bg-gray-100 group">
         {isEditing ? (
           <input
             className="w-full"
@@ -124,22 +124,19 @@ export const ColumnTitle: FC<IColumnTitle> = ({
             defaultValue={titleState}
           />
         ) : (
-          <span
-            className="w-full rounded cursor-pointer hover:bg-gray-100"
-            onClick={handleSpanClick}
-          >
+          <span className="w-full rounded cursor-pointer" onClick={handleSpanClick}>
             {titleState}
           </span>
         )}
         <button
-          className="w-6 p-1 rounded text-gray-500 hover:bg-gray-100 shrink-0"
+          className="w-6 p-1 rounded text-gray-500 hover:bg-gray-200 invisible group-hover:visible shrink-0"
           type="button"
           onClick={handleButtonClick}
         >
           <TrashIcon />
         </button>
       </div>
-      <span>order: {order}</span>
+      <span className="text-xs p-1">order: {order}</span>
     </div>
   );
 };

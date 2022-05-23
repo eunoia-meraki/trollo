@@ -134,7 +134,7 @@ export const TaskTitle: FC<ITaskTitle> = ({
     <div
       className={classNames('flex flex-col font-light', (isDragging || isMoving) && 'opacity-50')}
     >
-      <div className="flex gap-1">
+      <div className="flex gap-1 p-1 rounded hover:bg-gray-100 group">
         {isEditing ? (
           <input
             className="w-full"
@@ -146,15 +146,12 @@ export const TaskTitle: FC<ITaskTitle> = ({
             defaultValue={titleState}
           />
         ) : (
-          <span
-            className="w-full rounded cursor-pointer hover:bg-gray-100"
-            onClick={handleSpanClick}
-          >
+          <span className="w-full rounded cursor-pointer" onClick={handleSpanClick}>
             {titleState}
           </span>
         )}
         <button
-          className="w-6 p-1 rounded text-gray-500 hover:bg-gray-100 shrink-0"
+          className="w-6 p-1 text-gray-500 hover:bg-gray-200 invisible group-hover:visible shrink-0"
           type="button"
           onClick={handleButtonClick}
         >
@@ -162,7 +159,7 @@ export const TaskTitle: FC<ITaskTitle> = ({
         </button>
       </div>
       {/* //TODO add desc <span>{description}</span> */}
-      <span className="text-xs">order: {order}</span>
+      <span className="text-xs p-1">order: {order}</span>
     </div>
   );
 };
