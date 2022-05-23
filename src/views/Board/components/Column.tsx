@@ -10,6 +10,7 @@ import { Task } from './Task';
 import { DragColumnData, Draggable, DragTaskData } from '../../../types';
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
 import { ColumnTitle } from './ColumnTitle';
+import { PlusIcon } from '@heroicons/react/solid';
 
 export interface IColumn {
   boardId: string;
@@ -114,12 +115,12 @@ export const Column: FC<IColumn> = ({
   return (
     <div
       ref={ref}
-      className={'w-[200px] h-full overflow-hidden bg-[#867d7d11] rounded-sm'}
+      className={'w-[200px] h-full overflow-hidden bg-gray-50 shadow rounded-sm'}
       style={{ order }}
     >
       <div
         ref={drag}
-        className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-[#0003] rounded-sm'}
+        className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-white border rounded-sm'}
       >
         <ColumnTitle isDragging={isDragging} column={column} boardId={boardId} />
 
@@ -140,7 +141,13 @@ export const Column: FC<IColumn> = ({
         </div>
 
         <div className={classNames('w-full', isDragging && 'opacity-0')}>
-          <button className="w-full p-2 bg-[#aaa] rounded-sm" onClick={onAddTaskButtonClick}>
+          <button
+            className={`w-full flex gap-1 py-2.5 px-5 text-sm font-medium text-gray-900 
+             focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 
+           hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-200`}
+            onClick={onAddTaskButtonClick}
+          >
+            <PlusIcon className="w-5 h-5" />
             {t('addTask')}
           </button>
         </div>

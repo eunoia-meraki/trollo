@@ -89,11 +89,11 @@ export const ColumnTitle: FC<IColumnTitle> = ({
           defaultValue={titleState}
         />
       ) : (
-        <span className="cursor-pointer hover:bg-[#aaa]" onClick={handleClick}>
+        <span className="cursor-pointer hover:bg-gray-100" onClick={handleClick}>
           {titleState}
         </span>
       )}
-      <span>order: {order}</span>
+      <span className="text-xs">order: {order}</span>
     </div>
   );
 };

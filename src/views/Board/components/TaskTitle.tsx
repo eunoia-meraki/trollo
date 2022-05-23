@@ -104,7 +104,9 @@ export const TaskTitle: FC<ITaskTitle> = ({
   const handleRef = (ref: HTMLInputElement | null): void => ref?.focus();
 
   return (
-    <div className={classNames('flex flex-col', (isDragging || isMoving) && 'opacity-0')}>
+    <div
+      className={classNames('flex flex-col font-light', (isDragging || isMoving) && 'opacity-50')}
+    >
       {isEditing ? (
         <input
           type="text"
@@ -115,12 +117,12 @@ export const TaskTitle: FC<ITaskTitle> = ({
           defaultValue={titleState}
         />
       ) : (
-        <span className="cursor-pointer hover:bg-[#888]" onClick={handleClick}>
+        <span className="cursor-pointer hover:bg-gray-100" onClick={handleClick}>
           {titleState}
         </span>
       )}
       {/* <span>{description}</span> */}
-      <span>order: {order}</span>
+      <span className="text-xs">order: {order}</span>
     </div>
   );
 };

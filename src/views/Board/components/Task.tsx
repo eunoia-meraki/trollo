@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { APITaskData } from '../../../interfaces';
@@ -50,11 +49,7 @@ export const Task: FC<ITask> = ({
 
   return (
     <>
-      <div
-        ref={ref}
-        className={classNames('p-2 rounded-sm', isDragging ? 'bg-[#0001]' : 'bg-[#0003]')}
-        style={{ order }}
-      >
+      <div ref={ref} className="p-2 rounded border bg-white" style={{ order }}>
         <TaskTitle
           isDragging={isDragging}
           isMoving={isMoving}

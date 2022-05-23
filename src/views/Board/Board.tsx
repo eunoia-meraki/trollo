@@ -23,7 +23,7 @@ export const Board: FC = () => {
         </div>
       ) : (
         <div className="flex flex-col grow gap-2 h-full overflow-hidden">
-          <div className="bg-[#615f5f49] p-2 rounded-sm">
+          <div className="rounded-sm text-lg">
             <span>{boardData.title}</span>
           </div>
           <Columns columns={boardData.columns} boardId={params['boardId'] || ''} />
