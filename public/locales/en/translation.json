@@ -17,6 +17,7 @@
     "deleteBoard": "delete board",
     "deleteColumn": "delete column",
     "deleteProfile": "delete profile",
+    "deleteTask": "delete task",
     "no": "No",
     "yes": "Yes"
   },

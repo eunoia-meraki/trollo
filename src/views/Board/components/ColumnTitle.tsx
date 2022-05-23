@@ -58,6 +58,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({
       onSuccess: () => {
         queryClient.invalidateQueries([`boards/${boardId}`]);
       },
+      // TODO: toaster
       onError: (error) => {
         console.log(error);
       },
@@ -68,6 +69,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({
     onSuccess: () => {
       queryClient.invalidateQueries([`boards/${boardId}`]);
     },
+    // TODO: toaster
     onError: (error) => {
       console.log(error);
     },
@@ -103,13 +105,13 @@ export const ColumnTitle: FC<IColumnTitle> = ({
   const { openModal } = useContext(ConfirmationModalContext);
 
   const handleButtonClick = (): void => {
-    openModal(t('confirmationModal.deleteBoard'), () => {
+    openModal(t('confirmationModal.deleteColumn'), () => {
       deleteColumnMutation.mutate();
     });
   };
 
   return (
-    <div className={classNames('flex flex-col px-2', isDragging && 'opacity-0')}>
+    <div className={classNames('flex flex-col px-2 font-light', isDragging && 'opacity-0')}>
       <div className="flex gap-1">
         {isEditing ? (
           <input
@@ -122,12 +124,15 @@ export const ColumnTitle: FC<IColumnTitle> = ({
             defaultValue={titleState}
           />
         ) : (
-          <span className="w-full cursor-pointer hover:bg-[#aaa]" onClick={handleSpanClick}>
+          <span
+            className="w-full rounded cursor-pointer hover:bg-gray-100"
+            onClick={handleSpanClick}
+          >
             {titleState}
           </span>
         )}
         <button
-          className="w-6 p-1 text-gray-500 hover:bg-[#aaa] shrink-0"
+          className="w-6 p-1 rounded text-gray-500 hover:bg-gray-100 shrink-0"
           type="button"
           onClick={handleButtonClick}
         >
