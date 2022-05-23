@@ -34,7 +34,7 @@ axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
 
 export const App: FC = () => {
   return (
-    <div className="flex flex-col bg-gray-100 min-h-full">
+    <div className="flex flex-col bg-gray-100 h-full">
       <DndProvider backend={HTML5Backend}>
         <AuthProvider>
           <ConfirmationModalProvider>

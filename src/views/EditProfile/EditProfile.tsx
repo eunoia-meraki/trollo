@@ -107,7 +107,7 @@ export const EditProfile: FC = () => {
   });
 
   return (
-    <main className="mt-10">
+    <main className="h-full box-border overflow-auto min-h-[450px]">
       <form onSubmit={onSubmit} className="max-w-md p-6 mx-auto">
         <h3 className="text-xl font-bold text-center">{t('auth.profile')}</h3>
 

@@ -16,7 +16,7 @@ export const Board: FC = () => {
   );
 
   return (
-    <div className="container flex flex-col mx-auto my-2 p-2 h-full bg-white border overflow-hidden">
+    <div className="container flex flex-col mx-auto my-2 p-2 h-full bg-white border overflow-hidden min-h-[300px]">
       {isLoading || !boardData ? (
         <div className="flex justify-center items-center h-full">
           <Spinner style={{ width: '5rem', height: '5rem' }} />
