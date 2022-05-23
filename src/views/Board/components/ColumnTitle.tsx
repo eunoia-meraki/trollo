@@ -1,13 +1,19 @@
 import type { FC, FocusEvent, DragEvent } from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
-import axios, { AxiosResponse } from 'axios';
+import axios, { type AxiosResponse } from 'axios';
+
+import { useTranslation } from 'react-i18next';
 
 import classNames from 'classnames';
 
-import { APIColumnData } from '../../../interfaces';
+import { TrashIcon } from '@heroicons/react/solid';
+
+import type { APIColumnData } from '../../../interfaces';
+
+import { ConfirmationModalContext } from '../../../components/ConfirmationModalProvider';
 
 interface APIEditColumnPayload {
   title: string;
@@ -31,9 +37,12 @@ export const ColumnTitle: FC<IColumnTitle> = ({
   column: { id, title, order },
   boardId,
 }) => {
+  const { t } = useTranslation();
+
   const [isEditing, setIsEditing] = useState(false);
   const [titleState, setTitleState] = useState(title);
-  const [prevTitleState, setPrevTitleState] = useState(title);
+
+  const queryClient = useQueryClient();
 
   const editColumnMutation = useMutation<
     AxiosResponse<APIEditColumnResponse>,
@@ -46,19 +55,29 @@ export const ColumnTitle: FC<IColumnTitle> = ({
         order,
       }),
     {
-      onSuccess: ({ data: { title } }) => {
-        setPrevTitleState(title);
+      onSuccess: () => {
+        queryClient.invalidateQueries([`boards/${boardId}`]);
       },
       onError: (error) => {
-        setTitleState(prevTitleState);
         console.log(error);
       },
     }
   );
 
-  const handleClick = (): void => setIsEditing(true);
+  const deleteColumnMutation = useMutation(() => axios.delete(`boards/${boardId}/columns/${id}`), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([`boards/${boardId}`]);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>): void => {
+  const handleSpanClick = (): void => {
+    setIsEditing(true);
+  };
+
+  const handleInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
     const inputValue = e.target.value;
 
     if (inputValue) {
@@ -73,27 +92,49 @@ export const ColumnTitle: FC<IColumnTitle> = ({
     setIsEditing(false);
   };
 
-  const handleDragStart = (e: DragEvent<HTMLInputElement>): void => e.preventDefault();
+  const handleInputDragStart = (e: DragEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+  };
 
-  const handleRef = (ref: HTMLInputElement | null): void => ref?.focus();
+  const handleInputRef = (ref: HTMLInputElement | null): void => {
+    ref?.focus();
+  };
+
+  const { openModal } = useContext(ConfirmationModalContext);
+
+  const handleButtonClick = (): void => {
+    openModal(t('confirmationModal.deleteBoard'), () => {
+      deleteColumnMutation.mutate();
+    });
+  };
 
   return (
     <div className={classNames('flex flex-col px-2', isDragging && 'opacity-0')}>
-      {isEditing ? (
-        <input
-          type="text"
-          draggable
-          onDragStart={handleDragStart}
-          onBlur={handleBlur}
-          ref={handleRef}
-          defaultValue={titleState}
-        />
-      ) : (
-        <span className="cursor-pointer hover:bg-gray-100" onClick={handleClick}>
-          {titleState}
-        </span>
-      )}
-      <span className="text-xs">order: {order}</span>
+      <div className="flex gap-1">
+        {isEditing ? (
+          <input
+            className="w-full"
+            type="text"
+            draggable
+            onDragStart={handleInputDragStart}
+            onBlur={handleInputBlur}
+            ref={handleInputRef}
+            defaultValue={titleState}
+          />
+        ) : (
+          <span className="w-full cursor-pointer hover:bg-[#aaa]" onClick={handleSpanClick}>
+            {titleState}
+          </span>
+        )}
+        <button
+          className="w-6 p-1 text-gray-500 hover:bg-[#aaa] shrink-0"
+          type="button"
+          onClick={handleButtonClick}
+        >
+          <TrashIcon />
+        </button>
+      </div>
+      <span>order: {order}</span>
     </div>
   );
 };

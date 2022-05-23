@@ -15,6 +15,7 @@
   "confirmationModal": {
     "areYouSureYouWantTo": "Вы уверены, что хотите",
     "deleteBoard": "удалить доску",
+    "deleteColumn": "удалить колонку",
     "deleteProfile": "удалить профиль",
     "no": "Нет",
     "yes": "Да"
