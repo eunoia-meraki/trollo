@@ -31,6 +31,9 @@ import { WelcomeLayout } from './components/WelcomeLayout';
 import './App.css';
 
 axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { suspense: true } },
+});
 
 export const App: FC = () => {
   return (
@@ -39,7 +42,7 @@ export const App: FC = () => {
         <AuthProvider>
           <ConfirmationModalProvider>
             <AddItemModalProvider>
-              <QueryClientProvider client={new QueryClient()}>
+              <QueryClientProvider client={queryClient}>
                 <BrowserRouter>
                   <NoAuthRedirectWrapper>
                     <Routes>

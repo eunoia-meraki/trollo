@@ -43,7 +43,7 @@ export const EditProfile: FC = () => {
     mode: 'onSubmit',
   });
 
-  const { isLoading: isQueryLoading } = useQuery<IEditProfileForm, APIError>(
+  useQuery<IEditProfileForm, APIError>(
     `users/${authInfo?.userId}`,
     () => axios.get(`users/${authInfo?.userId}`).then((response) => response.data),
     {
@@ -91,7 +91,7 @@ export const EditProfile: FC = () => {
     openModal(t('confirmationModal.deleteProfile'), () => mutateRemoveProfile());
   };
 
-  const isLoading = isEditProfileLoading || isQueryLoading;
+  const isLoading = isEditProfileLoading;
 
   const onSubmit = handleSubmit((formData) => {
     mutateEditProfile(formData, {
@@ -118,7 +118,6 @@ export const EditProfile: FC = () => {
             type="text"
             placeholder={t('auth.login')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-            disabled={isQueryLoading}
             {...register('login', {
               validate: (value) => {
                 if (value === '') {
@@ -151,7 +150,6 @@ export const EditProfile: FC = () => {
             type="text"
             placeholder={t('auth.name')}
             className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-            disabled={isQueryLoading}
             {...register('name', {
               validate: (value) => {
                 if (value === '') {
@@ -185,7 +183,6 @@ export const EditProfile: FC = () => {
               type={passwordIsHidden ? 'password' : 'text'}
               autoComplete="new-password"
               placeholder={t('auth.password')}
-              disabled={isQueryLoading}
               className="w-full pl-4 pr-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               {...register('password', {
                 validate: (value) => {

@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { Suspense, type FC } from 'react';
 
 import { Outlet } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ import { useScrollPosition } from '../../hooks/useScrollPosition';
 import { RequireAuth } from '../RequireAuth';
 import { Logo } from '../Logo';
 import { UserButton } from '../UserButton';
+import { Spinner } from '../Spinner';
 
 export const HomeLayout: FC = () => {
   const scrollPosition = useScrollPosition();
@@ -29,7 +30,15 @@ export const HomeLayout: FC = () => {
           </div>
         </header>
 
-        <Outlet />
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center h-full">
+              <Spinner style={{ width: '5rem', height: '5rem' }} />
+            </div>
+          }
+        >
+          <Outlet />
+        </Suspense>
       </>
     </RequireAuth>
   );
