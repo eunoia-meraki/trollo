@@ -50,7 +50,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       prev.map((column) => {
         // allways false... escape warnings...
         if (dragColumnOrder === null || hoverColumnOrder === null) {
-          return column;
+          return { ...column };
         }
 
         if (column.id === dragColumnId) {
@@ -134,7 +134,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
                   hoverTaskColumnId === null ||
                   hoverTaskOrder === null
                 ) {
-                  return task;
+                  return { ...task };
                 }
 
                 if (task.id === dragTaskId) {
@@ -186,8 +186,8 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
 
     console.log('moveTask', 'dragTaskColumnId', dragTaskColumnId, 'toColumnId', toColumnId);
 
-    setColumnsLocal((prev) => {
-      return prev.map((column) => {
+    setColumnsLocal((prev) =>
+      prev.map((column) => {
         if (column.id === dragTaskColumnId) {
           return {
             ...column,
@@ -205,16 +205,19 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
               ];
             }, []),
           };
-        } else if (column.id === toColumnId) {
+        } else if (
+          column.id === toColumnId &&
+          column.tasks.find((t) => t.id === dragTask.id) === undefined
+        ) {
           return {
             ...column,
             tasks: [...column.tasks, { ...dragTask, order: column.tasks.length }],
           };
         }
 
-        return column;
-      });
-    });
+        return { ...column };
+      })
+    );
   };
 
   const changeOrder = () => {
@@ -270,8 +273,8 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       )}
 
       <button
-        className={`shrink-0 self-start p-2 flex gap-1 py-2.5 pr-5 text-sm font-medium text-gray-900 
-           focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 
+        className={`shrink-0 self-start p-2 flex gap-1 py-2.5 pr-5 text-sm font-medium text-gray-900
+           focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100
           hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-200`}
         onClick={onAddColumnButtonClick}
       >
