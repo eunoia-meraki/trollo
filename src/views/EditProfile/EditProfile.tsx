@@ -32,6 +32,16 @@ export const EditProfile: FC = () => {
   });
 
   const [passwordIsHidden, setPasswordIsHidden] = useState(true);
+  const { data } = useQuery<IEditProfileForm, APIError>(
+    `users/${authInfo?.userId}`,
+    () => axios.get(`users/${authInfo?.userId}`).then((response) => response.data),
+    {
+      onError: (e) => {
+        toast.error(e.message);
+        removeToken();
+      },
+    }
+  );
 
   const {
     register,
@@ -41,24 +51,11 @@ export const EditProfile: FC = () => {
     reset,
   } = useForm<IEditProfileForm>({
     mode: 'onSubmit',
+    defaultValues: {
+      login: data?.login || '',
+      name: data?.name || '',
+    },
   });
-
-  useQuery<IEditProfileForm, APIError>(
-    `users/${authInfo?.userId}`,
-    () => axios.get(`users/${authInfo?.userId}`).then((response) => response.data),
-    {
-      onSuccess: (data) => {
-        reset({
-          login: data.login,
-          name: data.name,
-        });
-      },
-      onError: (e) => {
-        toast.error(e.message);
-        removeToken();
-      },
-    }
-  );
 
   const { mutate: mutateEditProfile, isLoading: isEditProfileLoading } = useMutation<
     unknown,
