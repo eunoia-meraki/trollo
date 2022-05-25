@@ -4,16 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import { Path } from '../../types';
 
-import { LangSelect } from '../LangSelect';
-
 export const Footer: FC = () => {
   const { t } = useTranslation();
 
   return (
     <footer className="p-4 mt-auto border bg-white sm:p-6 dark:bg-gray-800">
-      <div className="md:flex md:justify-between md:items-start">
-        <LangSelect />
-
+      <div className="md:flex md:justify-end md:items-start">
         <div className="grid grid-cols-2 gap-8 sm:gap-6">
           <div>
             <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">

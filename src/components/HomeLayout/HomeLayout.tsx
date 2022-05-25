@@ -10,6 +10,7 @@ import { RequireAuth } from '../RequireAuth';
 import { Logo } from '../Logo';
 import { UserButton } from '../UserButton';
 import { Spinner } from '../Spinner';
+import { LangSelect } from '../LangSelect';
 
 export const HomeLayout: FC = () => {
   const scrollPosition = useScrollPosition();
@@ -27,6 +28,7 @@ export const HomeLayout: FC = () => {
 
           <div className="flex gap-2">
             <UserButton />
+            <LangSelect />
           </div>
         </header>
 
