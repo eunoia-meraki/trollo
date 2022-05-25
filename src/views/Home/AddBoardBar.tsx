@@ -1,14 +1,14 @@
 import type { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
 
 import axios from 'axios';
 import classNames from 'classnames';
-import { t } from 'i18next';
 
 import { PlusIcon } from '@heroicons/react/solid';
-import { useTranslation } from 'react-i18next';
-import { APIAddBoardPayload } from '../../interfaces';
+import { APIAddBoardPayload, APIError } from '../../interfaces';
 
 export const AddBoardBar: FC = () => {
   const { t } = useTranslation();
@@ -17,14 +17,14 @@ export const AddBoardBar: FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<APIAddBoardPayload>({
     mode: 'onSubmit',
     shouldUseNativeValidation: false,
   });
   const queryClient = useQueryClient();
 
-  const addBoardMutation = useMutation<unknown, unknown, APIAddBoardPayload>(
+  const addBoardMutation = useMutation<unknown, APIError, APIAddBoardPayload>(
     (formData) =>
       axios.post('boards', {
         title: formData.title,
@@ -35,7 +35,9 @@ export const AddBoardBar: FC = () => {
         reset();
         console.log(data);
       },
-      onError: (error) => console.log(error), // TODO: toaster
+      onError: (error) => {
+        toast.error(error.message);
+      },
     }
   );
 

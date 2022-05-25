@@ -8,10 +8,11 @@ import axios, { type AxiosResponse } from 'axios';
 import { TrashIcon } from '@heroicons/react/solid';
 
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 
 import classNames from 'classnames';
 
-import { APITaskData } from '../../../interfaces';
+import { APIError, APITaskData } from '../../../interfaces';
 
 import { AuthContext } from '../../../context/AuthProvider';
 
@@ -60,7 +61,7 @@ export const TaskTitle: FC<ITaskTitle> = ({
 
   const editTaskMutation = useMutation<
     AxiosResponse<APIEditTaskResponse>,
-    unknown,
+    APIError,
     APIEditTaskPayload
   >(
     ({ title, description, order, boardId, userId }) =>
@@ -76,22 +77,20 @@ export const TaskTitle: FC<ITaskTitle> = ({
       onSuccess: () => {
         queryClient.invalidateQueries([`boards/${boardId}`]);
       },
-      // TODO: toaster
       onError: (error) => {
-        console.log(error);
+        toast.error(error.message);
       },
     }
   );
 
-  const deleteColumnMutation = useMutation(
+  const deleteColumnMutation = useMutation<unknown, APIError>(
     () => axios.delete(`boards/${boardId}/columns/${columnId}/tasks/${id}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([`boards/${boardId}`]);
       },
-      // TODO: toaster
       onError: (error) => {
-        console.log(error);
+        toast.error(error.message);
       },
     }
   );
@@ -111,7 +110,7 @@ export const TaskTitle: FC<ITaskTitle> = ({
         description: 'task_desc', //TODO fix desc
         order: order,
         boardId: boardId,
-        userId: authInfo!.userId, // TODO check null
+        userId: authInfo?.userId || '',
       });
     }
 

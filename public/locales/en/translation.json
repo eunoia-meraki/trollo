@@ -28,14 +28,15 @@
   },
   "footer": {
     "authors": "Authors",
-    "school": "School",
-    "koren": "Alexey Koren",
-    "fomin": "Roman Fomin",
     "chukhlyaev": "Dmitry Chukhlyaev",
-    "kuricyn": "Ivan Kuricyn"
+    "fomin": "Roman Fomin",
+    "koren": "Alexey Koren",
+    "kuricyn": "Ivan Kuricyn",
+    "school": "School"
   },
   "inputBoardTitle": "Input board title",
   "mainPage": "Main page",
+  "refresh": "Refresh",
   "title": "Title",
   "toasterMessages": {
     "editProfileSuccess": "Success! Profile edited. SignIn again please.",

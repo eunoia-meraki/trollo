@@ -4,13 +4,15 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import { useTranslation } from 'react-i18next';
 
+import toast from 'react-hot-toast';
+
 import axios from 'axios';
 
 import classNames from 'classnames';
 
 import { TrashIcon } from '@heroicons/react/solid';
 
-import { APIBoardsData } from '../../interfaces';
+import { APIBoardsData, APIError } from '../../interfaces';
 
 import { ConfirmationModalContext } from '../../components/ConfirmationModalProvider';
 
@@ -18,21 +20,25 @@ interface IRemoveBoardButton {
   boardId: string;
 }
 
-// TODO: remove Modal?
 export const RemoveBoardButton: FC<IRemoveBoardButton> = ({ boardId }) => {
   const { t } = useTranslation();
 
   const queryClient = useQueryClient();
 
-  const removeBoardMutation = useMutation(() => axios.delete(`boards/${boardId}`), {
-    onSuccess: () => {
-      queryClient.setQueryData<APIBoardsData>(
-        'boards',
-        (old) => old?.filter((board) => board.id != boardId) || []
-      );
-    },
-    onError: (error) => console.log(error), // TODO: toaster
-  });
+  const removeBoardMutation = useMutation<unknown, APIError>(
+    () => axios.delete(`boards/${boardId}`),
+    {
+      onSuccess: () => {
+        queryClient.setQueryData<APIBoardsData>(
+          'boards',
+          (old) => old?.filter((board) => board.id != boardId) || []
+        );
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    }
+  );
 
   const { openModal } = useContext(ConfirmationModalContext);
 

@@ -7,6 +7,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { ErrorBoundary } from 'react-error-boundary';
+
 import axios from 'axios';
 
 import { Path } from './types';
@@ -28,6 +30,8 @@ import { ConfirmationModalProvider } from './components/ConfirmationModalProvide
 import { AddItemModalProvider } from './components/AddItemModalProvider';
 import { WelcomeLayout } from './components/WelcomeLayout';
 
+import { ErrorFallback } from './ErrorFallback';
+
 import './App.css';
 
 axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
@@ -38,36 +42,38 @@ const queryClient = new QueryClient({
 export const App: FC = () => {
   return (
     <div className="flex flex-col bg-gray-100 h-full">
-      <DndProvider backend={HTML5Backend}>
-        <AuthProvider>
-          <ConfirmationModalProvider>
-            <AddItemModalProvider>
-              <QueryClientProvider client={queryClient}>
-                <BrowserRouter>
-                  <NoAuthRedirectWrapper>
-                    <Routes>
-                      <Route path={Path.Welcome} element={<WelcomeLayout />}>
-                        <Route index element={<Welcome />} />
-                        <Route path={Path.SignIn} element={<SignIn />} />
-                        <Route path={Path.SignUp} element={<SignUp />} />
-                      </Route>
-                      <Route path={Path.Home} element={<HomeLayout />}>
-                        <Route index element={<Home />} />
-                        <Route path={Path.Board} element={<Board />} />
-                        <Route path={Path.EditProfile} element={<EditProfile />} />
-                      </Route>
-                      <Route path={Path.Error404} element={<Error404 />} />
-                      <Route path={Path.Any} element={<Navigate to={Path.Error404} replace />} />
-                    </Routes>
-                  </NoAuthRedirectWrapper>
-                </BrowserRouter>
-              </QueryClientProvider>
-            </AddItemModalProvider>
-          </ConfirmationModalProvider>
-        </AuthProvider>
-      </DndProvider>
+      <ErrorBoundary fallbackRender={ErrorFallback} onReset={() => window.location.reload()}>
+        <DndProvider backend={HTML5Backend}>
+          <AuthProvider>
+            <ConfirmationModalProvider>
+              <AddItemModalProvider>
+                <QueryClientProvider client={queryClient}>
+                  <BrowserRouter>
+                    <NoAuthRedirectWrapper>
+                      <Routes>
+                        <Route path={Path.Welcome} element={<WelcomeLayout />}>
+                          <Route index element={<Welcome />} />
+                          <Route path={Path.SignIn} element={<SignIn />} />
+                          <Route path={Path.SignUp} element={<SignUp />} />
+                        </Route>
+                        <Route path={Path.Home} element={<HomeLayout />}>
+                          <Route index element={<Home />} />
+                          <Route path={Path.Board} element={<Board />} />
+                          <Route path={Path.EditProfile} element={<EditProfile />} />
+                        </Route>
+                        <Route path={Path.Error404} element={<Error404 />} />
+                        <Route path={Path.Any} element={<Navigate to={Path.Error404} replace />} />
+                      </Routes>
+                    </NoAuthRedirectWrapper>
+                  </BrowserRouter>
+                </QueryClientProvider>
+              </AddItemModalProvider>
+            </ConfirmationModalProvider>
+          </AuthProvider>
+        </DndProvider>
 
-      <Footer />
+        <Footer />
+      </ErrorBoundary>
 
       <Toaster />
     </div>

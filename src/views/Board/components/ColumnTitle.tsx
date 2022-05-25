@@ -1,17 +1,19 @@
+import axios, { type AxiosResponse } from 'axios';
+
 import type { FC, FocusEvent, DragEvent } from 'react';
 import { useState, useContext } from 'react';
 
 import { useMutation, useQueryClient } from 'react-query';
 
-import axios, { type AxiosResponse } from 'axios';
-
 import { useTranslation } from 'react-i18next';
+
+import toast from 'react-hot-toast';
 
 import classNames from 'classnames';
 
 import { TrashIcon } from '@heroicons/react/solid';
 
-import type { APIColumnData } from '../../../interfaces';
+import type { APIColumnData, APIError } from '../../../interfaces';
 
 import { ConfirmationModalContext } from '../../../components/ConfirmationModalProvider';
 
@@ -46,7 +48,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({
 
   const editColumnMutation = useMutation<
     AxiosResponse<APIEditColumnResponse>,
-    unknown,
+    APIError,
     APIEditColumnPayload
   >(
     ({ title, order }) =>
@@ -58,22 +60,23 @@ export const ColumnTitle: FC<IColumnTitle> = ({
       onSuccess: () => {
         queryClient.invalidateQueries([`boards/${boardId}`]);
       },
-      // TODO: toaster
       onError: (error) => {
-        console.log(error);
+        toast.error(error.message);
       },
     }
   );
 
-  const deleteColumnMutation = useMutation(() => axios.delete(`boards/${boardId}/columns/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries([`boards/${boardId}`]);
-    },
-    // TODO: toaster
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const deleteColumnMutation = useMutation<unknown, APIError>(
+    () => axios.delete(`boards/${boardId}/columns/${id}`),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([`boards/${boardId}`]);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    }
+  );
 
   const handleSpanClick = (): void => {
     setIsEditing(true);

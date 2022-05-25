@@ -1,16 +1,22 @@
 import axios from 'axios';
+
+import classNames from 'classnames';
+
 import { FC, useContext, useRef } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { APIAddTaskPayload, APIColumnData } from '../../../interfaces';
-import { AuthContext } from '../../../context/AuthProvider';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useDrag, useDrop } from 'react-dnd';
-import classNames from 'classnames';
-import { Task } from './Task';
+
+import { PlusIcon } from '@heroicons/react/solid';
+
+import { APIAddTaskPayload, APIColumnData, APIError } from '../../../interfaces';
 import { DragColumnData, Draggable, DragTaskData } from '../../../types';
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
+import { AuthContext } from '../../../context/AuthProvider';
+
+import { Task } from './Task';
 import { ColumnTitle } from './ColumnTitle';
-import { PlusIcon } from '@heroicons/react/solid';
 
 export interface IColumn {
   boardId: string;
@@ -40,7 +46,7 @@ export const Column: FC<IColumn> = ({
   const currentBoardEndpoint = `boards/${boardId}`;
   const tasksEndpoint = `boards/${boardId}/columns/${id}/tasks`;
 
-  const addTaskMutation = useMutation<unknown, unknown, APIAddTaskPayload>(
+  const addTaskMutation = useMutation<unknown, APIError, APIAddTaskPayload>(
     ({ title, order, description, userId }) =>
       axios.post(tasksEndpoint, {
         title,
@@ -49,15 +55,14 @@ export const Column: FC<IColumn> = ({
         userId,
       }),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([currentBoardEndpoint]);
       },
-      // TODO: toaster
-      onError: (error) => console.log(error),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     }
   );
-
-  const onAddTaskClick = () => {};
 
   const [{ taskId }, dropTask] = useDrop<DragTaskData, unknown, { taskId: string }>({
     accept: Draggable.Task,
@@ -75,7 +80,7 @@ export const Column: FC<IColumn> = ({
 
   const [, drop] = useDrop<DragColumnData>({
     accept: Draggable.Column,
-    hover(item) {
+    hover: (item) => {
       const dragedColumnId = item.id;
       const hoverColumnId = id;
 
@@ -107,7 +112,7 @@ export const Column: FC<IColumn> = ({
       title: title,
       order: tasks.length,
       description: 'task desc',
-      userId: authInfo!.userId, // TODO check null
+      userId: authInfo?.userId || '',
     });
 
   const onAddTaskButtonClick = () => openModal(t('addTask'), addTask);

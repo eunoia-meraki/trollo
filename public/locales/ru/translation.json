@@ -28,14 +28,15 @@
   },
   "footer": {
     "authors": "Авторы",
-    "school": "Школа",
-    "koren": "Алексей Корен",
-    "fomin": "Роман Фомин",
     "chukhlyaev": "Дмитрий Чухляев",
-    "kuricyn": "Иван Курицын"
+    "fomin": "Роман Фомин",
+    "koren": "Алексей Корен",
+    "kuricyn": "Иван Курицын",
+    "school": "Школа"
   },
   "inputBoardTitle": "Введите название доски",
   "mainPage": "Главная страница",
+  "refresh": "Обновить",
   "title": "Заголовок",
   "toasterMessages": {
     "editProfileSuccess": "Успешно! Профиль изменен. Зайди пожалуйста заново.",

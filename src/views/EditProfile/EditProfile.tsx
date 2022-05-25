@@ -50,7 +50,6 @@ export const EditProfile: FC = () => {
     handleSubmit,
     formState: { errors },
     clearErrors,
-    reset,
   } = useForm<IEditProfileForm>({
     mode: 'onSubmit',
     defaultValues: {

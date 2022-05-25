@@ -1,10 +1,14 @@
-import { PlusIcon } from '@heroicons/react/solid';
 import axios from 'axios';
+
 import { FC, useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from 'react-query';
+
+import { PlusIcon } from '@heroicons/react/solid';
+
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
-import { APIAddColumnPayload, APIColumnData, APITaskData } from '../../../interfaces';
+import { APIAddColumnPayload, APIColumnData, APIError, APITaskData } from '../../../interfaces';
 import { Column } from './Column';
 
 export interface IColumns {
@@ -226,18 +230,19 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
     console.log('push columns to backend');
   };
 
-  const addColumnMutation = useMutation<unknown, unknown, APIAddColumnPayload>(
+  const addColumnMutation = useMutation<unknown, APIError, APIAddColumnPayload>(
     ({ title, order }) =>
       axios.post(columnsEndpoint, {
         title,
         order,
       }),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries([currentBoardEndpoint]);
       },
-      // TODO: toaster
-      onError: (error) => console.log(error),
+      onError: (error) => {
+        toast.error(error.message);
+      },
     }
   );
 
