@@ -103,7 +103,7 @@ export const TaskTitle: FC<ITaskTitle> = ({
   const handleInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
     const inputValue = e.target.value;
 
-    if (inputValue) {
+    if (inputValue && inputValue !== titleState) {
       setTitleState(inputValue);
 
       editTaskMutation.mutate({

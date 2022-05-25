@@ -8,15 +8,15 @@ export const Footer: FC = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="p-4 mt-auto border bg-white sm:p-6 dark:bg-gray-800">
-      <div className="md:flex md:justify-end md:items-start">
-        <div className="grid grid-cols-2 gap-8 sm:gap-6">
+    <footer className="p-4 mt-auto border bg-white sm:p-6">
+      <div className="flex justify-center items-start">
+        <div className="grid grid-cols-2 gap-8 sm:gap-12">
           <div>
-            <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+            <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
               {t('footer.authors')}
             </h2>
 
-            <ul className="text-gray-600 dark:text-gray-400">
+            <ul className="text-gray-600">
               <li className="mb-4">
                 <a href="https://github.com/alexey-koren" className="hover:underline">
                   {t('footer.koren')}
@@ -44,11 +44,11 @@ export const Footer: FC = () => {
           </div>
 
           <div>
-            <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+            <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
               {t('footer.school')}
             </h2>
 
-            <ul className="text-gray-600 dark:text-gray-400">
+            <ul className="text-gray-600">
               <li className="mb-4">
                 <a href="https://rs.school" className="hover:underline">
                   {t('webSite')}
@@ -73,9 +73,9 @@ export const Footer: FC = () => {
           </div>
         </div>
       </div>
-      <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+      <hr className="my-6 border-gray-200 sm:mx-auto lg:my-8" />
       <div className="sm:flex sm:items-center sm:justify-between">
-        <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+        <span className="text-sm text-gray-500 sm:text-center">
           © 2022{' '}
           <a href={Path.Welcome} className="hover:underline">
             Trollo™

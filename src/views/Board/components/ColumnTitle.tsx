@@ -82,7 +82,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({
   const handleInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
     const inputValue = e.target.value;
 
-    if (inputValue) {
+    if (inputValue && inputValue !== titleState) {
       setTitleState(inputValue);
 
       editColumnMutation.mutate({
