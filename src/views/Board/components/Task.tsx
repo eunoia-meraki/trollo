@@ -1,11 +1,13 @@
+import { UserIcon } from '@heroicons/react/solid';
 import { FC, useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import stc from 'string-to-color';
 import { APITaskData } from '../../../interfaces';
 import { Draggable, DragTaskData } from '../../../types';
 import { TaskTitle } from './TaskTitle';
 
 export interface ITask {
-  task: APITaskData;
+  task: APITaskData & { userName?: string };
   columnId: string;
   boardId: string;
   swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
@@ -57,6 +59,13 @@ export const Task: FC<ITask> = ({
           columnId={columnId}
           boardId={boardId}
         />
+        <div
+          className="ml-auto bg-gray-100 rounded-full w-5 h-5 border cursor-help overflow-hidden"
+          style={{ color: stc(task.userId) }}
+          title={task.userName}
+        >
+          <UserIcon className="m-[-2.5px]" />
+        </div>
       </div>
     </>
   );

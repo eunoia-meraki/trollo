@@ -3,12 +3,18 @@ import axios from 'axios';
 import { FC, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { PlusIcon } from '@heroicons/react/solid';
 
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
-import { APIAddColumnPayload, APIColumnData, APIError, APITaskData } from '../../../interfaces';
+import {
+  APIAddColumnPayload,
+  APIColumnData,
+  APIError,
+  APITaskData,
+  APIUsersData,
+} from '../../../interfaces';
 import { Column } from './Column';
 
 export interface IColumns {
@@ -21,6 +27,16 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
   const queryClient = useQueryClient();
   const columnsEndpoint = `boards/${boardId}/columns`;
   const currentBoardEndpoint = `boards/${boardId}`;
+
+  const { data: usersData } = useQuery<APIUsersData, APIError>(
+    'users',
+    () => axios.get('users').then((response) => response.data),
+    {
+      onError: (e) => {
+        toast.error(e.message);
+      },
+    }
+  );
 
   const [columnsLocal, setColumnsLocal] = useState(columns);
 
@@ -268,6 +284,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
               key={column.id}
               column={column}
               boardId={boardId}
+              usersData={usersData}
               swapColumns={swapColumns}
               swapTasks={swapTasks}
               moveTask={moveTask}

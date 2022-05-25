@@ -10,7 +10,7 @@ import { useDrag, useDrop } from 'react-dnd';
 
 import { PlusIcon } from '@heroicons/react/solid';
 
-import { APIAddTaskPayload, APIColumnData, APIError } from '../../../interfaces';
+import { APIAddTaskPayload, APIColumnData, APIError, APIUsersData } from '../../../interfaces';
 import { DragColumnData, Draggable, DragTaskData } from '../../../types';
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
 import { AuthContext } from '../../../context/AuthProvider';
@@ -21,6 +21,7 @@ import { ColumnTitle } from './ColumnTitle';
 export interface IColumn {
   boardId: string;
   column: APIColumnData;
+  usersData?: APIUsersData;
   swapColumns: (dragColumnId: string, hoverColumnId: string) => void;
   swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
   moveTask: (dragTaskId: string, toColumnId: string) => void;
@@ -30,6 +31,7 @@ export interface IColumn {
 export const Column: FC<IColumn> = ({
   column,
   boardId,
+  usersData,
   swapColumns,
   swapTasks,
   moveTask,
@@ -135,7 +137,7 @@ export const Column: FC<IColumn> = ({
           {tasks.map((task) => (
             <Task
               key={task.id}
-              task={task}
+              task={{ ...task, userName: usersData?.find((user) => user.id == task.userId)?.name }}
               columnId={id}
               boardId={boardId}
               isMoving={taskId === task.id}

@@ -42,6 +42,14 @@ export interface APITaskData {
   // columnId: string;
 }
 
+export interface APIUserData {
+  id: string;
+  name: string;
+  login: string;
+}
+
+export type APIUsersData = Array<APIUserData>;
+
 export interface APIError {
   message: string;
 }
