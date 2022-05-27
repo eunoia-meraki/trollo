@@ -28,7 +28,7 @@ export const Task: FC<ITask> = ({
 
   const [, dragTask] = useDrag<DragTaskData>({
     type: Draggable.Task,
-    item: () => ({ id }),
+    item: () => ({ id, columnId }),
     end: commitOrderChanges,
   });
 

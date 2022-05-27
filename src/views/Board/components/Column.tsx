@@ -24,7 +24,7 @@ export interface IColumn {
   usersData?: APIUsersData;
   swapColumns: (dragColumnId: string, hoverColumnId: string) => void;
   swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
-  moveTask: (dragTaskId: string, toColumnId: string) => void;
+  moveTask: (dragTaskId: string, fromColumnId: string, toColumnId: string) => void;
   commitOrderChanges: () => void;
 }
 
@@ -65,10 +65,19 @@ export const Column: FC<IColumn> = ({
     }
   );
 
-  const [{ id: dragTaskId }, dropTask] = useDrop<DragTaskData, unknown, DragTaskData>({
+  const [{ dragTaskId }, dropTask] = useDrop<DragTaskData, unknown, { dragTaskId: string }>({
     accept: Draggable.Task,
-    hover: (item) => moveTask(item.id, id),
-    collect: (monitor) => ({ id: monitor.getItem()?.id }),
+    hover: (item) => {
+      if (item.columnId === id) {
+        return;
+      }
+
+      moveTask(item.id, item.columnId, id);
+
+      // Dirty stuff, do not do this!
+      item.columnId = id;
+    },
+    collect: (monitor) => ({ dragTaskId: monitor.getItem()?.id }),
   });
 
   const [{ isDragging }, dragColumn] = useDrag<DragColumnData, unknown, { isDragging: boolean }>({

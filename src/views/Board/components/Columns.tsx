@@ -22,6 +22,8 @@ export interface IColumns {
   boardId: string;
 }
 
+const reducedId = (id: string) => id.split('-').reverse()[0];
+
 export const Columns: FC<IColumns> = ({ columns, boardId }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -64,7 +66,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       return;
     }
 
-    // console.log('swap');
+    console.log('swapColumns (col1, col2)', reducedId(dragColumnId), reducedId(hoverColumnId));
 
     setColumnsLocal((prev) =>
       prev.map((column) => {
@@ -138,7 +140,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       return;
     }
 
-    // console.log('swapTasks');
+    console.log('swapTasks (task1, task2)', reducedId(dragTaskId), reducedId(hoverTaskId));
 
     setColumnsLocal((prev) => {
       return prev.map((column) =>
@@ -184,35 +186,29 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
     });
   };
 
-  const moveTask = (dragTaskId: string, toColumnId: string) => {
-    let dragTask: APITaskData;
-    let dragTaskColumnId = '-';
+  const moveTask = (dragTaskId: string, fromColumnId: string, toColumnId: string) => {
+    const dragTask = columnsLocal
+      .find((column) => column.id === fromColumnId)
+      ?.tasks.find((task) => task.id === dragTaskId);
 
-    columnsLocal.find((column) =>
-      column.tasks.find((task) => {
-        if (task.id === dragTaskId) {
-          dragTask = task;
-          dragTaskColumnId = column.id;
-        }
-
-        return task.id === dragTaskId;
-      })
-    );
-
-    // avoid the same column id move
-    if (dragTaskColumnId === toColumnId) {
+    if (!dragTask) {
       return;
     }
 
-    // console.log('moveTask', 'dragTaskColumnId', dragTaskColumnId, 'toColumnId', toColumnId);
+    console.log(
+      'moveTask (task, from, to)',
+      reducedId(dragTaskId),
+      reducedId(fromColumnId),
+      reducedId(toColumnId)
+    );
 
     setColumnsLocal((prev) =>
       prev.map((column) => {
-        if (column.id === dragTaskColumnId) {
+        if (column.id === fromColumnId) {
           return {
             ...column,
-            tasks: column.tasks.reduce<APITaskData[]>((acc, task) => {
-              return [
+            tasks: column.tasks.reduce<APITaskData[]>(
+              (acc, task) => [
                 ...acc,
                 ...(task.id !== dragTaskId
                   ? [
@@ -222,13 +218,11 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
                       },
                     ]
                   : []),
-              ];
-            }, []),
+              ],
+              []
+            ),
           };
-        } else if (
-          column.id === toColumnId &&
-          column.tasks.find((t) => t.id === dragTask.id) === undefined
-        ) {
+        } else if (column.id === toColumnId) {
           return {
             ...column,
             tasks: [...column.tasks, { ...dragTask, order: column.tasks.length }],
