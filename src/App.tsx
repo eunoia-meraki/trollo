@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useEffect } from 'react';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
@@ -40,6 +40,10 @@ const queryClient = new QueryClient({
 });
 
 export const App: FC = () => {
+  useEffect(() => {
+    document.title = 'Trollo';
+  }, []);
+
   return (
     <div className="flex flex-col bg-gray-100 h-full">
       <ErrorBoundary fallbackRender={ErrorFallback} onReset={() => window.location.reload()}>
