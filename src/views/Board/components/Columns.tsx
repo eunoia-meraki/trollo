@@ -64,7 +64,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       return;
     }
 
-    console.log('swap');
+    // console.log('swap');
 
     setColumnsLocal((prev) =>
       prev.map((column) => {
@@ -138,7 +138,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       return;
     }
 
-    console.log('swapTasks');
+    // console.log('swapTasks');
 
     setColumnsLocal((prev) => {
       return prev.map((column) =>
@@ -204,7 +204,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
       return;
     }
 
-    console.log('moveTask', 'dragTaskColumnId', dragTaskColumnId, 'toColumnId', toColumnId);
+    // console.log('moveTask', 'dragTaskColumnId', dragTaskColumnId, 'toColumnId', toColumnId);
 
     setColumnsLocal((prev) =>
       prev.map((column) => {

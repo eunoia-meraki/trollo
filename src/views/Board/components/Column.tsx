@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import classNames from 'classnames';
 
-import { FC, useContext, useRef } from 'react';
+import { FC, useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +40,6 @@ export const Column: FC<IColumn> = ({
   const { id, order, tasks } = column;
 
   const { t } = useTranslation();
-  const ref = useRef<HTMLDivElement>(null);
 
   const { authInfo } = useContext(AuthContext);
   const queryClient = useQueryClient();
@@ -66,46 +65,32 @@ export const Column: FC<IColumn> = ({
     }
   );
 
-  const [{ taskId }, dropTask] = useDrop<DragTaskData, unknown, { taskId: string }>({
+  const [{ id: dragTaskId }, dropTask] = useDrop<DragTaskData, unknown, DragTaskData>({
     accept: Draggable.Task,
-    hover: (item) => {
-      const dragedTaskId = item.id;
-
-      moveTask(dragedTaskId, id);
-    },
-    collect: (monitor) => {
-      return {
-        taskId: monitor.getItem()?.id,
-      };
-    },
+    hover: (item) => moveTask(item.id, id),
+    collect: (monitor) => ({ id: monitor.getItem()?.id }),
   });
 
-  const [, drop] = useDrop<DragColumnData>({
+  const [{ isDragging }, dragColumn] = useDrag<DragColumnData, unknown, { isDragging: boolean }>({
+    type: Draggable.Column,
+    item: () => ({ id }),
+    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    end: commitOrderChanges,
+  });
+
+  const [, dropColumn] = useDrop<DragColumnData>({
     accept: Draggable.Column,
     hover: (item) => {
-      const dragedColumnId = item.id;
+      const dragColumnId = item.id;
       const hoverColumnId = id;
 
-      if (dragedColumnId === hoverColumnId) {
+      if (dragColumnId === hoverColumnId) {
         return;
       }
 
-      swapColumns(dragedColumnId, hoverColumnId);
+      swapColumns(dragColumnId, hoverColumnId);
     },
-    drop: () => commitOrderChanges(),
   });
-
-  const [{ isDragging }, drag] = useDrag<DragColumnData, unknown, { isDragging: boolean }>({
-    type: Draggable.Column,
-    item: () => {
-      return { id };
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
-
-  drop(dropTask(ref));
 
   const { openModal } = useContext(AddItemModalContext);
 
@@ -121,42 +106,47 @@ export const Column: FC<IColumn> = ({
 
   return (
     <div
-      ref={ref}
+      ref={(node) => dropColumn(dropTask(node))}
       className={'w-[200px] h-full overflow-hidden bg-gray-50 shadow rounded-sm'}
       style={{ order }}
     >
       <div
-        ref={drag}
+        ref={dragColumn}
         className={'flex flex-col gap-2 p-2 max-h-full overflow-hidden bg-white border rounded-sm'}
       >
-        <ColumnTitle isDragging={isDragging} column={column} boardId={boardId} />
-
         <div
-          className={classNames('flex flex-col gap-2 overflow-y-auto', isDragging && 'opacity-0')}
+          className={classNames('flex flex-col gap-2 overflow-hidden', isDragging && 'opacity-0')}
         >
-          {tasks.map((task) => (
-            <Task
-              key={task.id}
-              task={{ ...task, userName: usersData?.find((user) => user.id == task.userId)?.name }}
-              columnId={id}
-              boardId={boardId}
-              isMoving={taskId === task.id}
-              swapTasks={swapTasks}
-              commitOrderChanges={commitOrderChanges}
-            />
-          ))}
-        </div>
+          <ColumnTitle column={column} boardId={boardId} />
 
-        <div className={classNames('w-full', isDragging && 'opacity-0')}>
-          <button
-            className={`w-full flex gap-1 py-2.5 pl-2 pr-5 text-sm font-medium text-gray-900 
-             focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 
-           hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-200`}
-            onClick={onAddTaskButtonClick}
-          >
-            <PlusIcon className="w-5 h-5" />
-            {t('addTask')}
-          </button>
+          <div className={classNames('flex flex-col gap-2 overflow-y-auto')}>
+            {tasks.map((task) => (
+              <Task
+                key={task.id}
+                task={{
+                  ...task,
+                  userName: usersData?.find((user) => user.id == task.userId)?.name,
+                }}
+                columnId={id}
+                boardId={boardId}
+                isDragging={dragTaskId === task.id}
+                swapTasks={swapTasks}
+                commitOrderChanges={commitOrderChanges}
+              />
+            ))}
+          </div>
+
+          <div className={classNames('w-full')}>
+            <button
+              className={`w-full flex gap-1 py-2.5 pl-2 pr-5 text-sm font-medium text-gray-900
+     focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100
+   hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-200`}
+              onClick={onAddTaskButtonClick}
+            >
+              <PlusIcon className="w-5 h-5" />
+              {t('addTask')}
+            </button>
+          </div>
         </div>
       </div>
     </div>

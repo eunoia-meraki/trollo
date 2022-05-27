@@ -36,20 +36,12 @@ interface APIEditTaskResponse {
 }
 
 interface ITaskTitle {
-  isDragging: boolean;
-  isMoving: boolean;
   task: APITaskData;
   columnId: string;
   boardId: string;
 }
 
-export const TaskTitle: FC<ITaskTitle> = ({
-  isDragging,
-  isMoving,
-  task: { id, title, order },
-  columnId,
-  boardId,
-}) => {
+export const TaskTitle: FC<ITaskTitle> = ({ task: { id, title, order }, columnId, boardId }) => {
   const { t } = useTranslation();
 
   const { authInfo } = useContext(AuthContext);
@@ -130,9 +122,7 @@ export const TaskTitle: FC<ITaskTitle> = ({
   };
 
   return (
-    <div
-      className={classNames('flex flex-col font-light', (isDragging || isMoving) && 'opacity-50')}
-    >
+    <div className={classNames('flex flex-col font-light')}>
       <div className="flex gap-1 p-1 rounded hover:bg-gray-100 group">
         {isEditing ? (
           <input

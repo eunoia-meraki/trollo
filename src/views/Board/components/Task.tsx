@@ -1,5 +1,6 @@
 import { UserIcon } from '@heroicons/react/solid';
-import { FC, useRef } from 'react';
+import classNames from 'classnames';
+import { FC } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import stc from 'string-to-color';
 import { APITaskData } from '../../../interfaces';
@@ -12,7 +13,7 @@ export interface ITask {
   boardId: string;
   swapTasks: (dragTaskId: string, hoverTaskId: string) => void;
   commitOrderChanges: () => void;
-  isMoving?: boolean;
+  isDragging?: boolean;
 }
 
 export const Task: FC<ITask> = ({
@@ -21,50 +22,37 @@ export const Task: FC<ITask> = ({
   boardId,
   swapTasks,
   commitOrderChanges,
-  isMoving = false,
+  isDragging = false,
 }) => {
   const { id, order } = task;
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [, drop] = useDrop<DragTaskData>({
-    accept: Draggable.Task,
-    hover(item) {
-      const dragedTaskId = item.id;
-      const hoverTaskId = id;
-
-      swapTasks(dragedTaskId, hoverTaskId);
-    },
-    drop: () => commitOrderChanges(),
-  });
-
-  const [{ isDragging }, drag] = useDrag<DragTaskData, unknown, { isDragging: boolean }>({
+  const [, dragTask] = useDrag<DragTaskData>({
     type: Draggable.Task,
-    item: () => {
-      return { id };
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    item: () => ({ id }),
+    end: commitOrderChanges,
   });
 
-  drag(drop(ref));
+  const [, dropTask] = useDrop<DragTaskData>({
+    accept: Draggable.Task,
+    hover: (item) => swapTasks(item.id, id),
+  });
 
   return (
     <>
-      <div ref={ref} className="p-1 rounded border bg-white" style={{ order }}>
-        <TaskTitle
-          isDragging={isDragging}
-          isMoving={isMoving}
-          task={task}
-          columnId={columnId}
-          boardId={boardId}
-        />
-        <div
-          className="ml-auto bg-gray-100 rounded-full w-5 h-5 border cursor-help overflow-hidden"
-          style={{ color: stc(task.userId) }}
-          title={task.userName}
-        >
-          <UserIcon className="m-[-2.5px]" />
+      <div
+        ref={(node) => dragTask(dropTask(node))}
+        className="p-1 rounded border bg-white"
+        style={{ order }}
+      >
+        <div className={classNames(isDragging && 'opacity-0')}>
+          <TaskTitle task={task} columnId={columnId} boardId={boardId} />
+          <div
+            className="ml-auto bg-gray-100 rounded-full w-5 h-5 border cursor-help overflow-hidden"
+            style={{ color: stc(task.userId) }}
+            title={task.userName}
+          >
+            <UserIcon className="m-[-2.5px]" />
+          </div>
         </div>
       </div>
     </>
