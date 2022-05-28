@@ -2,9 +2,6 @@ import { type FC, useEffect } from 'react';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { ErrorBoundary } from 'react-error-boundary';
@@ -47,35 +44,32 @@ export const App: FC = () => {
   return (
     <div className="flex flex-col bg-gray-100 h-full">
       <ErrorBoundary fallbackRender={ErrorFallback} onReset={() => window.location.reload()}>
-        <DndProvider backend={HTML5Backend}>
-          <AuthProvider>
-            <ConfirmationModalProvider>
-              <AddItemModalProvider>
-                <QueryClientProvider client={queryClient}>
-                  <BrowserRouter>
-                    <NoAuthRedirectWrapper>
-                      <Routes>
-                        <Route path={Path.Welcome} element={<WelcomeLayout />}>
-                          <Route index element={<Welcome />} />
-                          <Route path={Path.SignIn} element={<SignIn />} />
-                          <Route path={Path.SignUp} element={<SignUp />} />
-                        </Route>
-                        <Route path={Path.Home} element={<HomeLayout />}>
-                          <Route index element={<Home />} />
-                          <Route path={Path.Board} element={<Board />} />
-                          <Route path={Path.EditProfile} element={<EditProfile />} />
-                        </Route>
-                        <Route path={Path.Error404} element={<Error404 />} />
-                        <Route path={Path.Any} element={<Navigate to={Path.Error404} replace />} />
-                      </Routes>
-                    </NoAuthRedirectWrapper>
-                  </BrowserRouter>
-                </QueryClientProvider>
-              </AddItemModalProvider>
-            </ConfirmationModalProvider>
-          </AuthProvider>
-        </DndProvider>
-
+        <AuthProvider>
+          <ConfirmationModalProvider>
+            <AddItemModalProvider>
+              <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                  <NoAuthRedirectWrapper>
+                    <Routes>
+                      <Route path={Path.Welcome} element={<WelcomeLayout />}>
+                        <Route index element={<Welcome />} />
+                        <Route path={Path.SignIn} element={<SignIn />} />
+                        <Route path={Path.SignUp} element={<SignUp />} />
+                      </Route>
+                      <Route path={Path.Home} element={<HomeLayout />}>
+                        <Route index element={<Home />} />
+                        <Route path={Path.Board} element={<Board />} />
+                        <Route path={Path.EditProfile} element={<EditProfile />} />
+                      </Route>
+                      <Route path={Path.Error404} element={<Error404 />} />
+                      <Route path={Path.Any} element={<Navigate to={Path.Error404} replace />} />
+                    </Routes>
+                  </NoAuthRedirectWrapper>
+                </BrowserRouter>
+              </QueryClientProvider>
+            </AddItemModalProvider>
+          </ConfirmationModalProvider>
+        </AuthProvider>
         <Footer />
       </ErrorBoundary>
 

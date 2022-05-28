@@ -28,7 +28,7 @@ export const Board: FC = () => {
           <div className="rounded-sm text-lg">
             <span className="font-semibold">{boardData.title}</span>
           </div>
-          <Columns columns={boardData.columns} boardId={params['boardId'] || ''} />
+          <Columns boardData={boardData} boardId={params['boardId'] || ''} />
         </div>
       )}
     </div>

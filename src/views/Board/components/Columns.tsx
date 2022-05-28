@@ -4,27 +4,34 @@ import { FC, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  DragDropContext,
+  Draggable,
+  DraggableLocation,
+  Droppable,
+  DropResult,
+} from 'react-beautiful-dnd';
 
 import { PlusIcon } from '@heroicons/react/solid';
 
 import { AddItemModalContext } from '../../../components/AddItemModalProvider';
 import {
   APIAddColumnPayload,
+  APIBoardData,
   APIColumnData,
   APIError,
-  APITaskData,
   APIUsersData,
 } from '../../../interfaces';
 import { Column } from './Column';
 
 export interface IColumns {
-  columns: APIColumnData[];
+  boardData: APIBoardData;
   boardId: string;
 }
 
-const reducedId = (id: string) => id.split('-').reverse()[0];
+export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
+  const { columns } = boardData;
 
-export const Columns: FC<IColumns> = ({ columns, boardId }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const columnsEndpoint = `boards/${boardId}/columns`;
@@ -40,204 +47,94 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
     }
   );
 
-  const [columnsLocal, setColumnsLocal] = useState(columns);
+  const [columnsLocal, setColumnsLocal] = useState(
+    columns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
+      return {
+        ...obj,
+        [item.id]: item,
+      };
+    }, {})
+  );
 
   useEffect(() => {
-    setColumnsLocal(columns);
+    columns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
+      return {
+        ...obj,
+        [item.id]: item,
+      };
+    }, {});
   }, [columns]);
 
-  const swapColumns = (dragColumnId: string, hoverColumnId: string) => {
-    let dragColumnOrder: number | null = null;
-    let hoverColumnOrder: number | null = null;
+  const onBoardDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
+    setColumnsLocal((columns) => {
+      let copiedColumns = [...Object.entries(columns).map(([, column]) => column)];
 
-    columnsLocal.find((column) => {
-      if (column.id === dragColumnId) {
-        dragColumnOrder = column.order;
-      }
+      const [removed] = copiedColumns.splice(source.index, 1);
+      copiedColumns.splice(destination.index, 0, removed);
 
-      if (column.id === hoverColumnId) {
-        hoverColumnOrder = column.order;
-      }
+      copiedColumns = copiedColumns.map((item, index) => ({ ...item, order: index }));
 
-      return dragColumnOrder !== null && hoverColumnOrder !== null;
-    });
-
-    if (dragColumnOrder === null || hoverColumnOrder === null) {
-      return;
-    }
-
-    console.log('swapColumns (col1, col2)', reducedId(dragColumnId), reducedId(hoverColumnId));
-
-    setColumnsLocal((prev) =>
-      prev.map((column) => {
-        // allways false... escape warnings...
-        if (dragColumnOrder === null || hoverColumnOrder === null) {
-          return { ...column };
-        }
-
-        if (column.id === dragColumnId) {
-          return { ...column, order: hoverColumnOrder };
-        }
-
-        const dir = dragColumnOrder - hoverColumnOrder;
-
-        return dir > 0
-          ? {
-              ...column,
-              order:
-                column.order >= hoverColumnOrder && column.order < dragColumnOrder
-                  ? column.order + 1
-                  : column.order,
-            }
-          : {
-              ...column,
-              order:
-                column.order <= hoverColumnOrder && column.order > dragColumnOrder
-                  ? column.order - 1
-                  : column.order,
-            };
-      })
-    );
-  };
-
-  const swapTasks = (dragTaskId: string, hoverTaskId: string) => {
-    if (dragTaskId === hoverTaskId) {
-      return;
-    }
-
-    let dragTaskColumnId: string | null = null;
-    let dragTaskOrder: number | null = null;
-    let hoverTaskColumnId: string | null = null;
-    let hoverTaskOrder: number | null = null;
-
-    columnsLocal.find((column) =>
-      column.tasks.find((task) => {
-        if (task.id === dragTaskId) {
-          dragTaskColumnId = column.id;
-          dragTaskOrder = task.order;
-        } else if (task.id === hoverTaskId) {
-          hoverTaskColumnId = column.id;
-          hoverTaskOrder = task.order;
-        }
-
-        return (
-          dragTaskColumnId !== null &&
-          dragTaskOrder !== null &&
-          hoverTaskColumnId !== null &&
-          hoverTaskOrder !== null
-        );
-      })
-    );
-
-    if (
-      // avoid swap between different columns
-      dragTaskColumnId !== hoverTaskColumnId ||
-      dragTaskColumnId === null ||
-      dragTaskOrder === null ||
-      hoverTaskColumnId === null ||
-      hoverTaskOrder === null
-    ) {
-      return;
-    }
-
-    console.log('swapTasks (task1, task2)', reducedId(dragTaskId), reducedId(hoverTaskId));
-
-    setColumnsLocal((prev) => {
-      return prev.map((column) =>
-        column.id !== dragTaskColumnId
-          ? { ...column }
-          : {
-              ...column,
-              tasks: column.tasks.map((task) => {
-                // allways false... escape warnings...
-                if (
-                  dragTaskColumnId === null ||
-                  dragTaskOrder === null ||
-                  hoverTaskColumnId === null ||
-                  hoverTaskOrder === null
-                ) {
-                  return { ...task };
-                }
-
-                if (task.id === dragTaskId) {
-                  return { ...task, order: hoverTaskOrder };
-                }
-
-                const dir = dragTaskOrder - hoverTaskOrder;
-
-                return dir > 0
-                  ? {
-                      ...task,
-                      order:
-                        task.order >= hoverTaskOrder && task.order < dragTaskOrder
-                          ? task.order + 1
-                          : task.order,
-                    }
-                  : {
-                      ...task,
-                      order:
-                        task.order <= hoverTaskOrder && task.order > dragTaskOrder
-                          ? task.order - 1
-                          : task.order,
-                    };
-              }),
-            }
-      );
+      return copiedColumns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
+        return {
+          ...obj,
+          [item.id]: item,
+        };
+      }, {});
     });
   };
 
-  const moveTask = (dragTaskId: string, fromColumnId: string, toColumnId: string) => {
-    const dragTask = columnsLocal
-      .find((column) => column.id === fromColumnId)
-      ?.tasks.find((task) => task.id === dragTaskId);
+  const onColumnDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columnsLocal[source.droppableId];
+      const destColumn = columnsLocal[destination.droppableId];
+      let sourceItems = [...sourceColumn.tasks];
+      let destItems = [...destColumn.tasks];
 
-    if (!dragTask) {
-      return;
+      const [removed] = sourceItems.splice(source.index, 1);
+      destItems.splice(destination.index, 0, removed);
+      sourceItems = sourceItems.map((item, index) => ({ ...item, order: index }));
+      destItems = destItems.map((item, index) => ({ ...item, order: index }));
+
+      setColumnsLocal((columns) => ({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          tasks: sourceItems,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          tasks: destItems,
+        },
+      }));
+    } else {
+      const column = columnsLocal[source.droppableId];
+      let copiedTasks = [...column.tasks];
+      const [removed] = copiedTasks.splice(source.index, 1);
+      copiedTasks.splice(destination.index, 0, removed);
+
+      copiedTasks = copiedTasks.map((item, index) => ({ ...item, order: index }));
+
+      setColumnsLocal((columns) => ({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          tasks: copiedTasks,
+        },
+      }));
     }
-
-    console.log(
-      'moveTask (task, from, to)',
-      reducedId(dragTaskId),
-      reducedId(fromColumnId),
-      reducedId(toColumnId)
-    );
-
-    setColumnsLocal((prev) =>
-      prev.map((column) => {
-        if (column.id === fromColumnId) {
-          return {
-            ...column,
-            tasks: column.tasks.reduce<APITaskData[]>(
-              (acc, task) => [
-                ...acc,
-                ...(task.id !== dragTaskId
-                  ? [
-                      {
-                        ...task,
-                        order: task.order > dragTask.order ? task.order - 1 : task.order,
-                      },
-                    ]
-                  : []),
-              ],
-              []
-            ),
-          };
-        } else if (column.id === toColumnId) {
-          return {
-            ...column,
-            tasks: [...column.tasks, { ...dragTask, order: column.tasks.length }],
-          };
-        }
-
-        return { ...column };
-      })
-    );
   };
 
-  const changeOrder = () => {
-    // TODO avoid no changes case
-    // TODO handle different types drop
-    console.log('push columns to backend');
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const { source, destination } = result;
+
+    if (result.type == 'BOARD') {
+      onBoardDragEnd(source, destination);
+      return;
+    } else {
+      onColumnDragEnd(source, destination);
+    }
   };
 
   const addColumnMutation = useMutation<unknown, APIError, APIAddColumnPayload>(
@@ -271,22 +168,33 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
 
   return (
     <div className="flex gap-2 grow overflow-hidden overflow-x-auto">
-      {columns.length > 0 && (
-        <div className="grid grid-rows-1 grid-flow-col gap-2">
-          {columnsLocal.map((column) => (
-            <Column
-              key={column.id}
-              column={column}
-              boardId={boardId}
-              usersData={usersData}
-              swapColumns={swapColumns}
-              swapTasks={swapTasks}
-              moveTask={moveTask}
-              commitOrderChanges={changeOrder}
-            />
-          ))}
-        </div>
-      )}
+      <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+        {Object.entries(columnsLocal).length > 0 && (
+          <Droppable droppableId={'board'} type="BOARD" direction="horizontal">
+            {(provided) => (
+              <div
+                className="grid grid-rows-1 grid-flow-col gap-2"
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {Object.entries(columnsLocal).map(([, column], index) => (
+                  <Draggable key={column.id} draggableId={column.id} index={index}>
+                    {(provided) => (
+                      <Column
+                        column={column}
+                        boardId={boardId}
+                        usersData={usersData}
+                        provided={provided}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
+      </DragDropContext>
 
       <button
         className={`shrink-0 self-start p-2 flex gap-1 py-2.5 pr-5 text-sm font-medium text-gray-900
