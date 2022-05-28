@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 
-import type { FC, FocusEvent, DragEvent } from 'react';
+import type { FC, DragEvent } from 'react';
 import { useState, useContext, useRef } from 'react';
 
 import { useMutation, useQueryClient } from 'react-query';
@@ -98,10 +98,8 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
     setIsEditing(false);
   };
 
-  const handleInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
-    if (e.relatedTarget === null) {
-      setIsEditing(false);
-    }
+  const handleInputBlur = (): void => {
+    setIsEditing(false);
   };
 
   const handleInputDragStart = (e: DragEvent<HTMLInputElement>): void => {
@@ -143,7 +141,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
               <XCircleIcon />
             </button>
             <input
-              className="w-full text-sm font-semibold pl-1"
+              className="w-full font-semibold pl-1"
               type="text"
               draggable
               onDragStart={handleInputDragStart}
