@@ -103,15 +103,18 @@ export const Column: FC<IColumn> = ({
 
   const { openModal } = useContext(AddItemModalContext);
 
-  const addTask = (title: string): void =>
+  const addTask = (title: string, description: string): void => {
     addTaskMutation.mutate({
       title: title,
       order: tasks.length,
-      description: 'task desc',
+      description: description,
       userId: authInfo?.userId || '',
     });
+  };
 
-  const onAddTaskButtonClick = () => openModal(t('addTask'), addTask);
+  const onAddTaskButtonClick = (): void => {
+    openModal('task', addTask);
+  };
 
   return (
     <div
@@ -148,8 +151,8 @@ export const Column: FC<IColumn> = ({
           <div className={classNames('w-full')}>
             <button
               className={`w-full flex gap-1 py-2.5 pl-2 pr-5 text-sm font-medium text-gray-900
-     focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100
-   hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-200`}
+                focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100
+              hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-200`}
               onClick={onAddTaskButtonClick}
             >
               <PlusIcon className="w-5 h-5" />

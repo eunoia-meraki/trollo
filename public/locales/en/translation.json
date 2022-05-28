@@ -23,6 +23,7 @@
   },
   "continue": "Continue",
   "deleteProfile": "Delete profile",
+  "description": "Description",
   "dummy": {
     "NoBordsYet": "No boards yet. Add at least one."
   },

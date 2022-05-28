@@ -109,9 +109,13 @@ export const TaskTitle: FC<ITaskTitle> = ({ task: { id, title, order }, columnId
     setIsEditing(false);
   };
 
-  const handleInputDragStart = (e: DragEvent<HTMLInputElement>): void => e.preventDefault();
+  const handleInputDragStart = (e: DragEvent<HTMLInputElement>): void => {
+    e.preventDefault();
+  };
 
-  const handleInputRef = (ref: HTMLInputElement | null): void => ref?.focus();
+  const handleInputRef = (ref: HTMLInputElement | null): void => {
+    ref?.focus();
+  };
 
   const { openModal } = useContext(ConfirmationModalContext);
 

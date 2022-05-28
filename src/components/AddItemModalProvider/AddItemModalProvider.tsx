@@ -8,34 +8,39 @@ import { Transition, Dialog } from '@headlessui/react';
 
 import { XIcon } from '@heroicons/react/solid';
 
-interface IAddItemModalProvider {
-  children: ReactElement;
+type Item = 'column' | 'task';
+
+interface IAddItemHandler {
+  handleAddItem: HandleAddItemFunction;
 }
 
 interface IAddModalForm {
   title: string;
+  description: string;
 }
 
-interface IAddItemHandler {
-  handleAddItem: (title: string) => void;
+interface IAddItemModalProvider {
+  children: ReactElement;
 }
 
 export const AddItemModalProvider: FC<IAddItemModalProvider> = ({ children }) => {
   const { t } = useTranslation();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState('');
   const [addItemHandler, setAddItemHandler] = useState<IAddItemHandler>({
     handleAddItem: () => {},
   });
+  const [item, setItem] = useState<Item>('column');
 
-  const openModal = (title: string, handleAddItem: (title: string) => void): void => {
+  const openModal: OpenModalFunction = (item, handleAddItem) => {
+    setItem(item);
     setAddItemHandler({ handleAddItem });
-    setTitle(title);
     setIsOpen(true);
   };
 
-  const closeModal = (): void => setIsOpen(false);
+  const closeModal = (): void => {
+    setIsOpen(false);
+  };
 
   const {
     register,
@@ -45,12 +50,17 @@ export const AddItemModalProvider: FC<IAddItemModalProvider> = ({ children }) =>
     reset,
   } = useForm<IAddModalForm>();
 
-  const onSubmit = handleSubmit(({ title }) => {
+  const onSubmit = handleSubmit(({ title, description }) => {
     const { handleAddItem } = addItemHandler;
-    handleAddItem(title);
+    handleAddItem(title, description);
     closeModal();
     reset();
   });
+
+  const title = {
+    column: t('addColumn'),
+    task: t('addTask'),
+  };
 
   return (
     <>
@@ -97,7 +107,7 @@ export const AddItemModalProvider: FC<IAddItemModalProvider> = ({ children }) =>
                   </div>
 
                   <Dialog.Title as="h3" className="text-xl font-bold text-center">
-                    {title}
+                    {title[item]}
                   </Dialog.Title>
 
                   <form onSubmit={onSubmit}>
@@ -113,14 +123,37 @@ export const AddItemModalProvider: FC<IAddItemModalProvider> = ({ children }) =>
                             value: true,
                             message: t('validationErrors.fieldCanNotBeEmpty'),
                           },
-                          onChange: () => clearErrors('title'),
                         })}
+                        onChange={() => clearErrors('title')}
                       />
 
                       {errors.title && (
                         <span className="text-red-500 text-sm">{errors.title.message}</span>
                       )}
                     </div>
+
+                    {item === 'task' && (
+                      <div>
+                        <label className="block">{t('description')}</label>
+
+                        <input
+                          type="text"
+                          placeholder={t('description')}
+                          className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                          {...register('description', {
+                            required: {
+                              value: true,
+                              message: t('validationErrors.fieldCanNotBeEmpty'),
+                            },
+                          })}
+                          onChange={() => clearErrors('description')}
+                        />
+
+                        {errors.description && (
+                          <span className="text-red-500 text-sm">{errors.description.message}</span>
+                        )}
+                      </div>
+                    )}
 
                     <button
                       type="submit"
@@ -139,8 +172,12 @@ export const AddItemModalProvider: FC<IAddItemModalProvider> = ({ children }) =>
   );
 };
 
+type HandleAddItemFunction = (title: string, description: string) => void;
+
+type OpenModalFunction = (item: Item, handleAddItem: HandleAddItemFunction) => void;
+
 interface IAddItemModalContext {
-  openModal: (title: string, handleAddItem: (title: string) => void) => void;
+  openModal: OpenModalFunction;
 }
 
 const defaultContext: IAddItemModalContext = {

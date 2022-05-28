@@ -266,7 +266,7 @@ export const Columns: FC<IColumns> = ({ columns, boardId }) => {
   };
 
   const onAddColumnButtonClick = () => {
-    openModal(t('addColumn'), addColumn);
+    openModal('column', addColumn);
   };
 
   return (
