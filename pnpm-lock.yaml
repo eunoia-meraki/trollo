@@ -6,6 +6,7 @@ specifiers:
   '@testing-library/jest-dom': ^5.16.4
   '@testing-library/react': ^13.2.0
   '@testing-library/user-event': ^13.5.0
+  '@types/autosize': ^4.0.1
   '@types/jest': ^27.5.0
   '@types/lodash': ^4.14.182
   '@types/node': ^16.11.33
@@ -14,6 +15,7 @@ specifiers:
   '@types/react-sticky': ^6.0.4
   '@typescript-eslint/eslint-plugin': ^5.16.0
   '@typescript-eslint/parser': ^5.16.0
+  autosize: ^5.0.1
   axios: ^0.27.2
   buffer: ^6.0.3
   classnames: ^2.3.1
@@ -57,10 +59,12 @@ dependencies:
   '@testing-library/jest-dom': 5.16.4
   '@testing-library/react': 13.2.0_ef5jwxihqo6n7gxfmzogljlgcm
   '@testing-library/user-event': 13.5.0
+  '@types/autosize': 4.0.1
   '@types/jest': 27.5.0
   '@types/node': 16.11.33
   '@types/react': 18.0.8
   '@types/react-dom': 18.0.3
+  autosize: 5.0.1
   axios: 0.27.2
   classnames: 2.3.1
   i18next: 21.8.2
@@ -2258,6 +2262,10 @@ packages:
     resolution: {integrity: sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==}
     dev: false
 
+  /@types/autosize/4.0.1:
+    resolution: {integrity: sha512-iPJT/FCaSO79G6j+9n6gmFc5nhxZ1gDrA2UAvb5FslJ6FJQZnDfbBU0qp5vpp0Cbjj7+gOyjuWZ7RrXvRuETaA==}
+    dev: false
+
   /@types/babel__core/7.1.19:
     resolution: {integrity: sha512-WEOTgRsbYkvA/KCsDwVEGkd7WAr1e3g31VHQ8zy5gul/V1qKullU/BU5I68X5v7V3GnB9eotmom4v5a5gjxorw==}
     dependencies:
@@ -3081,6 +3089,10 @@ packages:
       picocolors: 1.0.0
       postcss: 8.4.13
       postcss-value-parser: 4.2.0
+    dev: false
+
+  /autosize/5.0.1:
+    resolution: {integrity: sha512-UIWUlE4TOVPNNj2jjrU39wI4hEYbneUypEqcyRmRFIx5CC2gNdg3rQr+Zh7/3h6egbBvm33TDQjNQKtj9Tk1HA==}
     dev: false
 
   /axe-core/4.4.1:
@@ -9998,6 +10010,7 @@ packages:
     resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+    dev: false
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

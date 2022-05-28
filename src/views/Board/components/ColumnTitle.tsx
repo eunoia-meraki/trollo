@@ -113,7 +113,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
       <div className="flex gap-1 p-1 rounded hover:bg-gray-100 group">
         {isEditing ? (
           <input
-            className="w-full"
+            className="w-full font-semibold"
             type="text"
             draggable
             onDragStart={handleInputDragStart}
@@ -122,7 +122,7 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
             defaultValue={titleState}
           />
         ) : (
-          <span className="w-full rounded cursor-pointer" onClick={handleSpanClick}>
+          <span className="w-full font-semibold rounded cursor-pointer" onClick={handleSpanClick}>
             {titleState}
           </span>
         )}
