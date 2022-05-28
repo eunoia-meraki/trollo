@@ -69,7 +69,7 @@ export const Column: FC<IColumn> = ({ column, boardId, usersData, provided }) =>
 
   return (
     <div
-      className={`w-[200px] h-full overflow-hidden bg-gray-50 shadow rounded-sm`}
+      className={`w-[300px] h-full overflow-hidden bg-gray-50 shadow rounded-sm`}
       // style={{ order }}
       ref={provided.innerRef}
       {...provided.draggableProps}

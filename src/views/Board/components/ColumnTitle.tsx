@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from 'axios';
 
 import type { FC, FocusEvent, DragEvent } from 'react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 
 import classNames from 'classnames';
 
-import { TrashIcon } from '@heroicons/react/solid';
+import { TrashIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/solid';
 
 import type { APIColumnData, APIError } from '../../../interfaces';
 
@@ -38,6 +38,8 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
 
   const [isEditing, setIsEditing] = useState(false);
   const [titleState, setTitleState] = useState(title);
+
+  const inputRef = useRef<HTMLInputElement | undefined>();
 
   const queryClient = useQueryClient();
 
@@ -77,8 +79,8 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
     setIsEditing(true);
   };
 
-  const handleInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
-    const inputValue = e.target.value;
+  const handleSubmitClick = (): void => {
+    const inputValue = inputRef.current?.value;
 
     if (inputValue && inputValue !== titleState) {
       setTitleState(inputValue);
@@ -92,12 +94,25 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
     setIsEditing(false);
   };
 
+  const handleCancelClick = (): void => {
+    setIsEditing(false);
+  };
+
+  const handleInputBlur = (e: FocusEvent<HTMLInputElement>): void => {
+    if (e.relatedTarget === null) {
+      setIsEditing(false);
+    }
+  };
+
   const handleInputDragStart = (e: DragEvent<HTMLInputElement>): void => {
     e.preventDefault();
   };
 
   const handleInputRef = (ref: HTMLInputElement | null): void => {
-    ref?.focus();
+    if (ref) {
+      ref.focus();
+      inputRef.current = ref;
+    }
   };
 
   const { openModal } = useContext(ConfirmationModalContext);
@@ -112,27 +127,45 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
     <div className={classNames('flex flex-col font-light')}>
       <div className="flex gap-1 p-1 rounded hover:bg-gray-100 group">
         {isEditing ? (
-          <input
-            className="w-full font-semibold"
-            type="text"
-            draggable
-            onDragStart={handleInputDragStart}
-            onBlur={handleInputBlur}
-            ref={handleInputRef}
-            defaultValue={titleState}
-          />
+          <div className="flex gap-1 w-full">
+            <button
+              className="w-6 p-1 rounded text-gray-500 hover:bg-gray-200 shrink-0"
+              type="button"
+              onClick={handleSubmitClick}
+            >
+              <CheckCircleIcon />
+            </button>
+            <button
+              className="w-6 p-1 rounded text-gray-500 hover:bg-gray-200 shrink-0"
+              type="button"
+              onClick={handleCancelClick}
+            >
+              <XCircleIcon />
+            </button>
+            <input
+              className="w-full text-sm font-semibold pl-1"
+              type="text"
+              draggable
+              onDragStart={handleInputDragStart}
+              onBlur={handleInputBlur}
+              ref={handleInputRef}
+              defaultValue={titleState}
+            />
+          </div>
         ) : (
-          <span className="w-full font-semibold rounded cursor-pointer" onClick={handleSpanClick}>
-            {titleState}
-          </span>
+          <>
+            <span className="w-full font-semibold cursor-pointer" onClick={handleSpanClick}>
+              {titleState}
+            </span>
+            <button
+              className="w-6 p-1 rounded text-gray-500 hover:bg-gray-200 invisible group-hover:visible shrink-0"
+              type="button"
+              onClick={handleButtonClick}
+            >
+              <TrashIcon />
+            </button>
+          </>
         )}
-        <button
-          className="w-6 p-1 rounded text-gray-500 hover:bg-gray-200 invisible group-hover:visible shrink-0"
-          type="button"
-          onClick={handleButtonClick}
-        >
-          <TrashIcon />
-        </button>
       </div>
       <span className="text-xs p-1">order: {order}</span>
     </div>
