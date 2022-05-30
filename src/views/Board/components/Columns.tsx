@@ -22,6 +22,7 @@ import {
   APIError,
   APIEditColumnPayload,
   APIUsersData,
+  APIEditColumnResponse,
 } from '../../../interfaces';
 import { Column } from './Column';
 
@@ -62,23 +63,72 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
     console.log(columns);
   }, [columns]);
 
-  const modifyColumnMutation = useMutation<unknown, APIError, APIEditColumnPayload>(
+  const modifyColumnMutation = useMutation<
+    APIEditColumnResponse,
+    APIError,
+    APIEditColumnPayload,
+    APIBoardData
+  >(
     ({ title, order, columnId }) =>
       axios.put(`${columnsEndpoint}/${columnId}`, {
         title,
         order,
       }),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries([currentBoardEndpoint]);
+      onMutate: async (editedColumn) => {
+        const previousBoardData = queryClient.getQueryData<APIBoardData>(currentBoardEndpoint);
+
+        queryClient.setQueryData<APIBoardData | undefined>(currentBoardEndpoint, (prev) => {
+          if (!prev) {
+            return;
+          }
+          const columnBeforeEdit = prev.columns.find(
+            (column) => editedColumn.columnId == column.id
+          );
+
+          if (!columnBeforeEdit) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            columns: prev.columns.map((column) => {
+              if (column.id === columnBeforeEdit.id) {
+                return { ...column, order: editedColumn.order };
+              }
+              const dir = columnBeforeEdit.order - editedColumn.order;
+              return dir > 0
+                ? {
+                    ...column,
+                    order:
+                      column.order >= editedColumn.order && column.order < columnBeforeEdit.order
+                        ? column.order + 1
+                        : column.order,
+                  }
+                : {
+                    ...column,
+                    order:
+                      column.order <= editedColumn.order && column.order > columnBeforeEdit.order
+                        ? column.order - 1
+                        : column.order,
+                  };
+            }),
+          };
+        });
+
+        return previousBoardData;
       },
-      onError: (error) => {
+      onError: (error, payload, previousBoardData) => {
         toast.error(error.message);
+        queryClient.setQueryData(currentBoardEndpoint, previousBoardData);
       },
     }
   );
 
   const onBoardDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
+    if (source.index == destination.index) {
+      return;
+    }
     const copiedColumns = [...Object.entries(columnsLocal).map(([, column]) => column)];
 
     modifyColumnMutation.mutate({
