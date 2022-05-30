@@ -12,9 +12,7 @@ export const Footer: FC = () => {
       <div className="flex justify-center items-start">
         <div className="grid grid-cols-2 gap-8 sm:gap-12">
           <div>
-            <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
-              {t('footer.authors')}
-            </h2>
+            <h2 className="mb-6 text-lg font-semibold text-gray-900">{t('footer.authors')}</h2>
 
             <ul className="text-gray-600">
               <li className="mb-4">
@@ -44,9 +42,7 @@ export const Footer: FC = () => {
           </div>
 
           <div>
-            <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase">
-              {t('footer.school')}
-            </h2>
+            <h2 className="mb-6 text-lg font-semibold text-gray-900">{t('footer.school')}</h2>
 
             <ul className="text-gray-600">
               <li className="mb-4">
@@ -80,7 +76,7 @@ export const Footer: FC = () => {
           <a href={Path.Welcome} className="hover:underline">
             Trollo™
           </a>
-          . All Rights Reserved.
+          {t('footer.rights')}
         </span>
         <div className="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
           <svg width="70" height="25" viewBox="0 0 242 90">

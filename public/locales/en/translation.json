@@ -33,6 +33,7 @@
     "fomin": "Roman Fomin",
     "koren": "Alexey Koren",
     "kuricyn": "Ivan Kuricyn",
+    "rights": ". All Rights Reserved",
     "school": "School"
   },
   "inputBoardTitle": "Input board title",
@@ -58,5 +59,13 @@
     "fieldСanNotBeShorterThan4Characters": "Field can not be shorter than 4 characters",
     "fieldСanNotBeShorterThan6Characters": "Field can not be shorter than 6 characters"
   },
-  "webSite": "Website"
+  "webSite": "Website",
+  "welcomePage": {
+    "aboutCourse": "Free-of-charge education program conducted by The Rolling Scopes developer community since 2013",
+    "aboutProject": "An application that helps an individual in a team or group of developers to achieve their goals",
+    "aboutTeam": "A group of React amateurs, dreaming to become professionals",
+    "course": "Course",
+    "project": "Project",
+    "team": "Team"
+  }
 }
