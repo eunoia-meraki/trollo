@@ -208,8 +208,6 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
             {descriptionState}
           </div>
         )}
-
-        <span className="text-xs p-1">order: {order}</span>
       </div>
 
       <div

@@ -159,7 +159,6 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
           </>
         )}
       </div>
-      <span className="text-xs p-1">order: {order}</span>
     </div>
   );
 };
