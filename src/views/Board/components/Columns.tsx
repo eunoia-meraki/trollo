@@ -20,6 +20,7 @@ import {
   APIBoardData,
   APIColumnData,
   APIError,
+  APIEditColumnPayload,
   APIUsersData,
 } from '../../../interfaces';
 import { Column } from './Column';
@@ -47,39 +48,43 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
     }
   );
 
-  const [columnsLocal, setColumnsLocal] = useState(
-    columns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
-      return {
-        ...obj,
-        [item.id]: item,
-      };
-    }, {})
-  );
+  const [columnsLocal, setColumnsLocal] = useState<{ [id: string]: APIColumnData }>({});
 
   useEffect(() => {
-    columns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
-      return {
-        ...obj,
-        [item.id]: item,
-      };
-    }, {});
-  }, [columns]);
-
-  const onBoardDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
-    setColumnsLocal((columns) => {
-      let copiedColumns = [...Object.entries(columns).map(([, column]) => column)];
-
-      const [removed] = copiedColumns.splice(source.index, 1);
-      copiedColumns.splice(destination.index, 0, removed);
-
-      copiedColumns = copiedColumns.map((item, index) => ({ ...item, order: index }));
-
-      return copiedColumns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
+    setColumnsLocal(
+      columns.reduce<{ [id: string]: APIColumnData }>((obj, item) => {
         return {
           ...obj,
           [item.id]: item,
         };
-      }, {});
+      }, {})
+    );
+    console.log(columns);
+  }, [columns]);
+
+  const modifyColumnMutation = useMutation<unknown, APIError, APIEditColumnPayload>(
+    ({ title, order, columnId }) =>
+      axios.put(`${columnsEndpoint}/${columnId}`, {
+        title,
+        order,
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([currentBoardEndpoint]);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    }
+  );
+
+  const onBoardDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
+    const copiedColumns = [...Object.entries(columnsLocal).map(([, column]) => column)];
+
+    modifyColumnMutation.mutate({
+      columnId: copiedColumns[source.index].id,
+      order: copiedColumns[destination.index].order,
+      title: copiedColumns[source.index].title,
     });
   };
 
@@ -95,8 +100,8 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
       sourceItems = sourceItems.map((item, index) => ({ ...item, order: index }));
       destItems = destItems.map((item, index) => ({ ...item, order: index }));
 
-      setColumnsLocal((columns) => ({
-        ...columns,
+      const newColumnsLocal = {
+        ...columnsLocal,
         [source.droppableId]: {
           ...sourceColumn,
           tasks: sourceItems,
@@ -105,7 +110,9 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
           ...destColumn,
           tasks: destItems,
         },
-      }));
+      };
+
+      console.log(newColumnsLocal);
     } else {
       const column = columnsLocal[source.droppableId];
       let copiedTasks = [...column.tasks];
@@ -114,13 +121,15 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
 
       copiedTasks = copiedTasks.map((item, index) => ({ ...item, order: index }));
 
-      setColumnsLocal((columns) => ({
-        ...columns,
+      const newColumnsLocal = {
+        ...columnsLocal,
         [source.droppableId]: {
           ...column,
           tasks: copiedTasks,
         },
-      }));
+      };
+
+      console.log(newColumnsLocal);
     }
   };
 
@@ -138,10 +147,9 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
   };
 
   const addColumnMutation = useMutation<unknown, APIError, APIAddColumnPayload>(
-    ({ title, order }) =>
+    ({ title }) =>
       axios.post(columnsEndpoint, {
         title,
-        order,
       }),
     {
       onSuccess: () => {
@@ -157,8 +165,7 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
 
   const addColumn = (title: string): void => {
     addColumnMutation.mutate({
-      title: title,
-      order: columns.length,
+      title,
     });
   };
 

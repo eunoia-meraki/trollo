@@ -13,20 +13,14 @@ import classNames from 'classnames';
 
 import { TrashIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/solid';
 
-import type { APIColumnData, APIError } from '../../../interfaces';
+import type {
+  APIColumnData,
+  APIEditColumnPayload,
+  APIEditColumnResponse,
+  APIError,
+} from '../../../interfaces';
 
 import { ConfirmationModalContext } from '../../../components/ConfirmationModalProvider';
-
-interface APIEditColumnPayload {
-  title: string;
-  order: number;
-}
-
-interface APIEditColumnResponse {
-  title: string;
-  order: number;
-  id: string;
-}
 
 interface IColumnTitle {
   column: APIColumnData;

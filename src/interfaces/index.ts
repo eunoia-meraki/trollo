@@ -9,7 +9,17 @@ export interface APIAddBoardPayload {
 
 export interface APIAddColumnPayload {
   title: string;
+}
+
+export interface APIEditColumnPayload extends APIAddColumnPayload {
   order: number;
+  columnId?: string;
+}
+
+export interface APIEditColumnResponse {
+  title: string;
+  order: number;
+  id: string;
 }
 
 export interface APIAddTaskPayload {

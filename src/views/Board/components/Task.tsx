@@ -170,7 +170,6 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
       {...provided.draggableProps}
       {...provided.dragHandleProps}
       className={`p-1 rounded border ${isDragging ? 'bg-blue-100' : 'bg-white'}`}
-      // style={{ order }}
     >
       <div className={classNames('flex flex-col font-light')}>
         <div className="flex gap-1 p-1 rounded hover:bg-gray-100 group">

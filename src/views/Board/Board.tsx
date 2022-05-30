@@ -18,6 +18,18 @@ export const Board: FC = () => {
       onError: (e) => {
         toast.error(e.message);
       },
+      select: (nonSortedData) => {
+        const data = {
+          ...nonSortedData,
+          columns: [
+            ...nonSortedData.columns.map((column) => ({
+              ...column,
+              tasks: [...column.tasks].sort((t1, t2) => t1.order - t2.order),
+            })),
+          ].sort((c1, c2) => c1.order - c2.order),
+        };
+        return data;
+      },
     }
   );
 

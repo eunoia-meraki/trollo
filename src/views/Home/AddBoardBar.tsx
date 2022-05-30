@@ -28,6 +28,7 @@ export const AddBoardBar: FC = () => {
     (formData) =>
       axios.post('boards', {
         title: formData.title,
+        description: 'none', // TODO fix
       }),
     {
       onSuccess: (data) => {

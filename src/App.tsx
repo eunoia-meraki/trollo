@@ -31,7 +31,7 @@ import { ErrorFallback } from './ErrorFallback';
 
 import './App.css';
 
-axios.defaults.baseURL = 'https://evening-bastion-08665.herokuapp.com/';
+axios.defaults.baseURL = 'https://floating-fjord-18963.herokuapp.com/';
 const queryClient = new QueryClient({
   defaultOptions: { queries: { suspense: true } },
 });
