@@ -31,7 +31,7 @@ export const AddBoardBar: FC = () => {
         description: 'none', // TODO fix
       }),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries(['boards']);
         reset();
       },
