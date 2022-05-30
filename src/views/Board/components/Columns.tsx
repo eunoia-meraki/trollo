@@ -267,20 +267,10 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
     const dstColumnTasks = columnsLocal[destination.droppableId].tasks;
     const editedTask = srcColumnTasks[source.index];
 
-    console.log(source, destination);
-
     const sameColumn = source.droppableId === destination.droppableId;
 
     const dstTask = dstColumnTasks[destination.index];
     const moveOrder = !dstTask ? destination.index + 1 : dstColumnTasks[destination.index].order;
-
-    console.log({
-      ...editedTask,
-      boardId,
-      order: sameColumn ? srcColumnTasks[destination.index].order : moveOrder,
-      columnId: sameColumn ? source.droppableId : destination.droppableId,
-      selfColumnId: source.droppableId,
-    });
 
     modifyTaskMutation.mutate({
       ...editedTask,
