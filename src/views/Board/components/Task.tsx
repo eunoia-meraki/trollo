@@ -176,7 +176,7 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
             />
           ) : (
             <span
-              className="w-full text-sm leading-6 cursor-pointer font-semibold"
+              className="w-full text-sm leading-6 cursor-pointer font-semibold overflow-x-hidden text-ellipsis"
               onClick={handleTitleClick}
             >
               {titleState}
@@ -199,10 +199,11 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
             onBlur={handleTextAreaBlur}
             ref={handleTextAreaRef}
             defaultValue={descriptionState}
+            maxLength={300}
           />
         ) : (
           <div
-            className="p-1 text-sm rounded cursor-pointer hover:bg-gray-100"
+            className="p-1 text-sm rounded cursor-pointer hover:bg-gray-100 overflow-x-hidden text-ellipsis"
             onClick={handleDescriptionClick}
           >
             {descriptionState}

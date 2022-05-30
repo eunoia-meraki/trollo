@@ -146,7 +146,10 @@ export const ColumnTitle: FC<IColumnTitle> = ({ column: { id, title, order }, bo
           </div>
         ) : (
           <>
-            <span className="w-full font-semibold cursor-pointer" onClick={handleSpanClick}>
+            <span
+              className="w-full font-semibold cursor-pointer overflow-x-hidden text-ellipsis"
+              onClick={handleSpanClick}
+            >
               {titleState}
             </span>
             <button

@@ -38,7 +38,7 @@ export const Board: FC = () => {
       {boardData && (
         <div className="flex flex-col grow gap-2 h-full overflow-hidden">
           <div className="rounded-sm text-lg">
-            <span className="font-semibold">{boardData.title}</span>
+            <span className="font-semibold overflow-x-hidden text-ellipsis">{boardData.title}</span>
           </div>
           <Columns boardData={boardData} boardId={params['boardId'] || ''} />
         </div>
