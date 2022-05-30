@@ -66,6 +66,7 @@ export interface APIAddTaskPayload {
 export interface APIEditTaskPayload extends APIAddTaskPayload {
   order: number;
   columnId: string;
+  selfColumnId?: string;
   id?: string;
   boardId?: string;
 }

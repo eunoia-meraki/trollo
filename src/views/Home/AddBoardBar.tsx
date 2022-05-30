@@ -34,7 +34,6 @@ export const AddBoardBar: FC = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(['boards']);
         reset();
-        console.log(data);
       },
       onError: (error) => {
         toast.error(error.message);

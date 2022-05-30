@@ -25,6 +25,7 @@ import {
   APIEditColumnResponse,
   APIEditTaskResponse,
   APIEditTaskPayload,
+  APITaskData,
 } from '../../../interfaces';
 import { Column } from './Column';
 
@@ -62,7 +63,6 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
         };
       }, {})
     );
-    console.log(columns);
   }, [columns]);
 
   const modifyColumnMutation = useMutation<
@@ -138,8 +138,8 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
     APIEditTaskPayload,
     APIBoardData
   >(
-    ({ id, title, description, order, userId, columnId, boardId }) =>
-      axios.put(`boards/${boardId}/columns/${columnId}/tasks/${id}`, {
+    ({ id, title, description, order, userId, selfColumnId, columnId, boardId }) =>
+      axios.put(`boards/${boardId}/columns/${selfColumnId}/tasks/${id}`, {
         title,
         description,
         order,
@@ -157,49 +157,86 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
           }
 
           const taskBeforeEdit = prev.columns
-            .find((column) => column.id === editedTask.columnId)
+            .find((column) => column.id === editedTask.selfColumnId)
             ?.tasks.find((task) => task.id === editedTask.id);
 
           if (!taskBeforeEdit) {
             return prev;
           }
 
-          const dragTaskId = editedTask.id;
+          const dragTaskId = taskBeforeEdit.id;
           const dragTaskOrder = taskBeforeEdit.order;
+          const dragTaskColumnId = editedTask.selfColumnId;
+
           const hoverTaskOrder = editedTask.order;
+          const hoverTaskColumnId = editedTask.columnId;
 
           return {
             ...prev,
-            columns: prev.columns.map((column) =>
-              column.id !== editedTask.columnId
-                ? { ...column }
-                : {
-                    ...column,
-                    tasks: column.tasks.map((task) => {
-                      if (task.id === dragTaskId) {
-                        return { ...task, order: hoverTaskOrder };
-                      }
+            columns:
+              dragTaskColumnId === hoverTaskColumnId
+                ? prev.columns.map((column) =>
+                    column.id !== hoverTaskColumnId
+                      ? { ...column }
+                      : {
+                          ...column,
+                          tasks: column.tasks.map((task) => {
+                            if (task.id === dragTaskId) {
+                              return { ...task, order: hoverTaskOrder };
+                            }
 
-                      const dir = dragTaskOrder - hoverTaskOrder;
+                            const dir = dragTaskOrder - hoverTaskOrder;
 
-                      return dir > 0
-                        ? {
-                            ...task,
-                            order:
-                              task.order >= hoverTaskOrder && task.order < dragTaskOrder
-                                ? task.order + 1
-                                : task.order,
-                          }
-                        : {
-                            ...task,
-                            order:
-                              task.order <= hoverTaskOrder && task.order > dragTaskOrder
-                                ? task.order - 1
-                                : task.order,
-                          };
-                    }),
-                  }
-            ),
+                            return dir > 0
+                              ? {
+                                  ...task,
+                                  order:
+                                    task.order >= hoverTaskOrder && task.order < dragTaskOrder
+                                      ? task.order + 1
+                                      : task.order,
+                                }
+                              : {
+                                  ...task,
+                                  order:
+                                    task.order <= hoverTaskOrder && task.order > dragTaskOrder
+                                      ? task.order - 1
+                                      : task.order,
+                                };
+                          }),
+                        }
+                  )
+                : prev.columns.map((column) => {
+                    if (column.id === dragTaskColumnId) {
+                      return {
+                        ...column,
+                        tasks: column.tasks.reduce<APITaskData[]>((acc, task) => {
+                          return [
+                            ...acc,
+                            ...(task.id !== dragTaskId
+                              ? [
+                                  {
+                                    ...task,
+                                    order: task.order > dragTaskOrder ? task.order - 1 : task.order,
+                                  },
+                                ]
+                              : []),
+                          ];
+                        }, []),
+                      };
+                    } else if (column.id === hoverTaskColumnId) {
+                      return {
+                        ...column,
+                        tasks: [
+                          ...column.tasks.map((task) =>
+                            task.order >= hoverTaskOrder ? { ...task, order: task.order + 1 } : task
+                          ),
+                          { ...taskBeforeEdit, order: hoverTaskOrder },
+                        ],
+                      };
+                    }
+
+                    return { ...column };
+                  }),
           };
         });
 
@@ -226,41 +263,32 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
   };
 
   const onColumnDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = columnsLocal[source.droppableId];
-      const destColumn = columnsLocal[destination.droppableId];
-      let sourceItems = [...sourceColumn.tasks];
-      let destItems = [...destColumn.tasks];
+    const srcColumnTasks = columnsLocal[source.droppableId].tasks;
+    const dstColumnTasks = columnsLocal[destination.droppableId].tasks;
+    const editedTask = srcColumnTasks[source.index];
 
-      const [removed] = sourceItems.splice(source.index, 1);
-      destItems.splice(destination.index, 0, removed);
-      sourceItems = sourceItems.map((item, index) => ({ ...item, order: index }));
-      destItems = destItems.map((item, index) => ({ ...item, order: index }));
+    console.log(source, destination);
 
-      const newColumnsLocal = {
-        ...columnsLocal,
-        [source.droppableId]: {
-          ...sourceColumn,
-          tasks: sourceItems,
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          tasks: destItems,
-        },
-      };
+    const sameColumn = source.droppableId === destination.droppableId;
 
-      console.log(newColumnsLocal);
-    } else {
-      const columnTasks = columnsLocal[source.droppableId].tasks;
-      const editedTask = columnTasks[source.index];
+    const dstTask = dstColumnTasks[destination.index];
+    const moveOrder = !dstTask ? destination.index + 1 : dstColumnTasks[destination.index].order;
 
-      modifyTaskMutation.mutate({
-        ...editedTask,
-        order: columnTasks[destination.index].order,
-        boardId,
-        columnId: source.droppableId,
-      });
-    }
+    console.log({
+      ...editedTask,
+      boardId,
+      order: sameColumn ? srcColumnTasks[destination.index].order : moveOrder,
+      columnId: sameColumn ? source.droppableId : destination.droppableId,
+      selfColumnId: source.droppableId,
+    });
+
+    modifyTaskMutation.mutate({
+      ...editedTask,
+      boardId,
+      order: sameColumn ? srcColumnTasks[destination.index].order : moveOrder,
+      columnId: sameColumn ? source.droppableId : destination.droppableId,
+      selfColumnId: source.droppableId,
+    });
   };
 
   const onDragEnd = (result: DropResult) => {
