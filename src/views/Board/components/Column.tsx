@@ -25,7 +25,7 @@ export interface IColumn {
 }
 
 export const Column: FC<IColumn> = ({ column, boardId, usersData, provided }) => {
-  const { id, order, tasks } = column;
+  const { id, tasks } = column;
 
   const { t } = useTranslation();
 
@@ -36,10 +36,9 @@ export const Column: FC<IColumn> = ({ column, boardId, usersData, provided }) =>
   const tasksEndpoint = `boards/${boardId}/columns/${id}/tasks`;
 
   const addTaskMutation = useMutation<unknown, APIError, APIAddTaskPayload>(
-    ({ title, order, description, userId }) =>
+    ({ title, description, userId }) =>
       axios.post(tasksEndpoint, {
         title,
-        order,
         description,
         userId,
       }),
@@ -57,7 +56,6 @@ export const Column: FC<IColumn> = ({ column, boardId, usersData, provided }) =>
   const addTask = (title: string, description: string): void => {
     addTaskMutation.mutate({
       title: title,
-      order: tasks.length,
       description: description,
       userId: authInfo?.userId || '',
     });

@@ -14,28 +14,16 @@ import axios, { type AxiosResponse } from 'axios';
 
 import stc from 'string-to-color';
 
-import { APITaskData, APIError } from '../../../interfaces';
+import {
+  APITaskData,
+  APIError,
+  APIEditTaskResponse,
+  APIEditTaskPayload,
+} from '../../../interfaces';
 
 import { AuthContext } from '../../../context/AuthProvider';
 import { ConfirmationModalContext } from '../../../components/ConfirmationModalProvider';
 import { DraggableProvided } from 'react-beautiful-dnd';
-
-interface APIEditTaskPayload {
-  title: string;
-  description: string;
-  order: number;
-  boardId: string;
-  userId: string;
-}
-
-interface APIEditTaskResponse {
-  title: string;
-  description: string;
-  order: number;
-  id: string;
-  boardId: string;
-  userId: string;
-}
 
 export interface ITask {
   task: APITaskData & { userName?: string };
@@ -71,6 +59,7 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
         order,
         boardId,
         userId,
+        columnId,
       }),
 
     {
@@ -115,6 +104,7 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
         order: order,
         boardId: boardId,
         userId: authInfo?.userId || '',
+        columnId,
       });
     }
 
@@ -133,6 +123,7 @@ export const Task: FC<ITask> = ({ task, columnId, boardId, provided, isDragging 
         order: order,
         boardId: boardId,
         userId: authInfo?.userId || '',
+        columnId,
       });
     }
 

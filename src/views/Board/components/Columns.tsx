@@ -23,6 +23,8 @@ import {
   APIEditColumnPayload,
   APIUsersData,
   APIEditColumnResponse,
+  APIEditTaskResponse,
+  APIEditTaskPayload,
 } from '../../../interfaces';
 import { Column } from './Column';
 
@@ -69,8 +71,8 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
     APIEditColumnPayload,
     APIBoardData
   >(
-    ({ title, order, columnId }) =>
-      axios.put(`${columnsEndpoint}/${columnId}`, {
+    ({ title, order, id }) =>
+      axios.put(`${columnsEndpoint}/${id}`, {
         title,
         order,
       }),
@@ -82,33 +84,38 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
           if (!prev) {
             return;
           }
-          const columnBeforeEdit = prev.columns.find(
-            (column) => editedColumn.columnId == column.id
-          );
+
+          const columnBeforeEdit = prev.columns.find((column) => editedColumn.id == column.id);
 
           if (!columnBeforeEdit) {
             return prev;
           }
 
+          const dragColumnId = editedColumn.id;
+          const dragColumnOrder = columnBeforeEdit.order;
+          const hoverColumnOrder = editedColumn.order;
+
           return {
             ...prev,
             columns: prev.columns.map((column) => {
-              if (column.id === columnBeforeEdit.id) {
-                return { ...column, order: editedColumn.order };
+              if (column.id === dragColumnId) {
+                return { ...column, order: hoverColumnOrder };
               }
-              const dir = columnBeforeEdit.order - editedColumn.order;
+
+              const dir = dragColumnOrder - hoverColumnOrder;
+
               return dir > 0
                 ? {
                     ...column,
                     order:
-                      column.order >= editedColumn.order && column.order < columnBeforeEdit.order
+                      column.order >= hoverColumnOrder && column.order < dragColumnOrder
                         ? column.order + 1
                         : column.order,
                   }
                 : {
                     ...column,
                     order:
-                      column.order <= editedColumn.order && column.order > columnBeforeEdit.order
+                      column.order <= hoverColumnOrder && column.order > dragColumnOrder
                         ? column.order - 1
                         : column.order,
                   };
@@ -125,14 +132,94 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
     }
   );
 
+  const modifyTaskMutation = useMutation<
+    APIEditTaskResponse,
+    APIError,
+    APIEditTaskPayload,
+    APIBoardData
+  >(
+    ({ id, title, description, order, userId, columnId, boardId }) =>
+      axios.put(`boards/${boardId}/columns/${columnId}/tasks/${id}`, {
+        title,
+        description,
+        order,
+        userId,
+        boardId,
+        columnId,
+      }),
+    {
+      onMutate: async (editedTask) => {
+        const previousBoardData = queryClient.getQueryData<APIBoardData>(currentBoardEndpoint);
+
+        queryClient.setQueryData<APIBoardData | undefined>(currentBoardEndpoint, (prev) => {
+          if (!prev) {
+            return;
+          }
+
+          const taskBeforeEdit = prev.columns
+            .find((column) => column.id === editedTask.columnId)
+            ?.tasks.find((task) => task.id === editedTask.id);
+
+          if (!taskBeforeEdit) {
+            return prev;
+          }
+
+          const dragTaskId = editedTask.id;
+          const dragTaskOrder = taskBeforeEdit.order;
+          const hoverTaskOrder = editedTask.order;
+
+          return {
+            ...prev,
+            columns: prev.columns.map((column) =>
+              column.id !== editedTask.columnId
+                ? { ...column }
+                : {
+                    ...column,
+                    tasks: column.tasks.map((task) => {
+                      if (task.id === dragTaskId) {
+                        return { ...task, order: hoverTaskOrder };
+                      }
+
+                      const dir = dragTaskOrder - hoverTaskOrder;
+
+                      return dir > 0
+                        ? {
+                            ...task,
+                            order:
+                              task.order >= hoverTaskOrder && task.order < dragTaskOrder
+                                ? task.order + 1
+                                : task.order,
+                          }
+                        : {
+                            ...task,
+                            order:
+                              task.order <= hoverTaskOrder && task.order > dragTaskOrder
+                                ? task.order - 1
+                                : task.order,
+                          };
+                    }),
+                  }
+            ),
+          };
+        });
+
+        return previousBoardData;
+      },
+      onError: (error, payload, previousBoardData) => {
+        toast.error(error.message);
+        queryClient.setQueryData(currentBoardEndpoint, previousBoardData);
+      },
+    }
+  );
+
   const onBoardDragEnd = (source: DraggableLocation, destination: DraggableLocation) => {
     if (source.index == destination.index) {
       return;
     }
-    const copiedColumns = [...Object.entries(columnsLocal).map(([, column]) => column)];
+    const copiedColumns = Object.values(columnsLocal);
 
     modifyColumnMutation.mutate({
-      columnId: copiedColumns[source.index].id,
+      id: copiedColumns[source.index].id,
       order: copiedColumns[destination.index].order,
       title: copiedColumns[source.index].title,
     });
@@ -164,22 +251,15 @@ export const Columns: FC<IColumns> = ({ boardData, boardId }) => {
 
       console.log(newColumnsLocal);
     } else {
-      const column = columnsLocal[source.droppableId];
-      let copiedTasks = [...column.tasks];
-      const [removed] = copiedTasks.splice(source.index, 1);
-      copiedTasks.splice(destination.index, 0, removed);
+      const columnTasks = columnsLocal[source.droppableId].tasks;
+      const editedTask = columnTasks[source.index];
 
-      copiedTasks = copiedTasks.map((item, index) => ({ ...item, order: index }));
-
-      const newColumnsLocal = {
-        ...columnsLocal,
-        [source.droppableId]: {
-          ...column,
-          tasks: copiedTasks,
-        },
-      };
-
-      console.log(newColumnsLocal);
+      modifyTaskMutation.mutate({
+        ...editedTask,
+        order: columnTasks[destination.index].order,
+        boardId,
+        columnId: source.droppableId,
+      });
     }
   };
 
